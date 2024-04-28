@@ -19,5 +19,14 @@ typedef struct {
     int estatus;
 }cliente;
 
+int nuevoCliente(void);
+
+int leerArchivo(void);
+
+int compararRFC(cliente *, FILE *);
+
+int generarID(cliente*, FILE*);
+
+int limpiarArchivo(void);
 
 #endif
