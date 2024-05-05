@@ -29,4 +29,6 @@ int generarID(cliente*, FILE*);
 
 int limpiarArchivo(void);
 
+int clienteEliminar(void);
+
 #endif

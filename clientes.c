@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <string.h>
+#include <unistd.h> //libreria para el sleep
 
 
 //Sirve para registrar a un nuevo cliente
@@ -113,6 +114,7 @@ int leerArchivo(void){
             printf("Colonia: %s\n", clienteImprimir.dir.colonia);
             printf("Numero de domicilio: %d\n", clienteImprimir.dir.numero);
             printf("Codigo Postal: %d\n", clienteImprimir.dir.cp);
+            printf("Estatus: %d\n", clienteImprimir.estatus); //Impresion para probar funcion eliminar clientes
         }
     }
     if (fclose(archCliente) == EOF){
@@ -162,4 +164,73 @@ int limpiarArchivo(void){
         return 1;
     }
     return 1;
+}
+
+int eliminarCliente(void){
+    int id;
+    char opc;
+    FILE *archClientes;
+    cliente clseleccionado;
+
+    //Archivo abierto con permisos de lectura y escritura
+    if ((archClientes=fopen("./bin/clientes.bin", "rb+"))==NULL){
+        printf("\nError al abrir el archivo.");
+        return 1;
+    }
+
+    printf("Ingrese el ID del cliente a eliminar: ");
+    fflush(stdin);
+    scanf("%d", &id);
+
+    //ciclo sigue hasta que la funcion fread lea el final del archivo
+    while(fread(&clseleccionado, sizeof(cliente), 1, archClientes)>0){
+        if(clseleccionado.ID == id){
+            if(clseleccionado.estatus == 0){
+                printf("\nCliente ya esta dado de baja.");
+                break;
+            }
+            else{
+                clseleccionado.estatus = 0;
+
+                //Regresa el puntero del archivo un espacio atras para sobreescribir
+                if(fseek(archClientes, -(long)(sizeof(cliente)), SEEK_CUR) != 0){
+                    printf("Error al actualizar los cambios, intente de nuevo...");
+                    sleep(3);
+                    return 1;
+                }
+                //reescribe la informacion del cliente pero con el estatus actualizado
+                if ((fwrite(&clseleccionado, sizeof(cliente), 1, archClientes))!=1){
+                    printf("Error al actualizar los cambios, intente de nuevo...");
+                    sleep(3);
+                    return 1;
+                }
+                else{
+                    printf("\nCliente eliminado exitosamente.");
+                    break;
+                }
+            }
+        }
+        else{
+            printf("\nID no encontrado. Desea hacer otra busqueda? [s/n]");
+            fflush(stdin);
+            scanf("%c", &opc);
+            while (tolower(opc) != 's' && tolower(opc) != 'n'){
+                printf("Opcion invalida intente denuevo...");
+                printf("\nDesea hacer otra busqueda? [s/n]");
+                fflush(stdin);
+                scanf("%c", &opc);
+            }
+            opc = tolower(opc);
+            if (opc == 's'){
+                rewind(archClientes);
+                printf("Ingrese el ID del cliente a eliminar: ");
+                fflush(stdin);
+                scanf("%d", &id);
+            }
+            else{
+                break;
+            }
+        }
+    }
+    fclose(archClientes);
 }
