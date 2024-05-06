@@ -8,14 +8,11 @@ void obtener_fecha(char *fecha_strF, size_t max_len) //Funcion para obtener una 
 {
 	//Obtenemos la fecha
 	time_t t = time(NULL);
-    struct tm *fecha_actual = localtime(&t);
+    	struct tm *fecha_actual = localtime(&t);
 
     
-    // Crea una cadena para almacenar la fecha
-    
-    
     // Formatea la fecha en la cadena
-    strftime(fecha_strF, max_len, "%Y-%m-%d", fecha_actual);
+	strftime(fecha_strF, max_len, "%Y-%m-%d", fecha_actual);
 }
 
 
