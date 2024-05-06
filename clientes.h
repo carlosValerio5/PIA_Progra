@@ -31,4 +31,8 @@ int limpiarArchivo(void);
 
 int clienteEliminar(void);
 
+int consultaNom(void);
+
+int consultaClav(void);
+
 #endif
