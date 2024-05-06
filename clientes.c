@@ -10,6 +10,7 @@
 //Sirve para registrar a un nuevo cliente
 int nuevoCliente(void){
     cliente nuevoCliente;
+    char *newline;
 
     //Archivo donde se almacenan los datos de los clientes
     FILE *archClientes;
@@ -31,24 +32,43 @@ int nuevoCliente(void){
     printf("\nIngrese nombre: ");
     fflush(stdin);
     fgets(nuevoCliente.nombre, sizeof(nuevoCliente.nombre), stdin);
+    //Eliminar new line character
+    newline = strstr(nuevoCliente.nombre, "\n");
+    if(newline != NULL)
+        strncpy(newline, "\0", 1);
+    newline = NULL;
     printf("\nIngrese apellido Paterno: ");
     fflush(stdin);
     fgets(nuevoCliente.apellidoP, sizeof(nuevoCliente.apellidoP), stdin);
+    newline = strstr(nuevoCliente.apellidoP, "\n");
+    if(newline != NULL)
+        strncpy(newline, "\0", 1);
+    newline = NULL;
     printf("\nIngrese apellido Materno: ");
     fflush(stdin);
     fgets(nuevoCliente.apellidoM, sizeof(nuevoCliente.apellidoM), stdin);
-
+    newline = strstr(nuevoCliente.apellidoM, "\n");
+    if(newline != NULL)
+        strncpy(newline, "\0", 1);
+    newline = NULL;
     //RFC
     printf("Ingrese RFC: ");
     fflush(stdin);
     fgets(nuevoCliente.RFC, 11, stdin);
+    newline = strstr(nuevoCliente.RFC, "\n");
+    if(newline != NULL)
+        strncpy(newline, "\0", 1);
+    newline = NULL;
     compararRFC(&nuevoCliente, archClientes);
 
     //Correo electronico
     printf("\nIngrese su correo electronico: ");
     fflush(stdin);
     fgets(nuevoCliente.correo, sizeof(nuevoCliente.correo), stdin);
-
+    newline = strstr(nuevoCliente.correo, "\n");
+    if(newline != NULL)
+        strncpy(newline, "\0", 1);
+    newline = NULL;
     //numero de telefono
     printf("\nIngrese su numero de telefono: ");
     fflush(stdin);
@@ -68,10 +88,18 @@ int nuevoCliente(void){
     printf("\nIngrese calle: ");
     fflush(stdin);
     fgets(nuevoCliente.dir.calle, sizeof(nuevoCliente.dir.calle), stdin);
+    newline = strstr(nuevoCliente.dir.calle, "\n");
+    if(newline != NULL)
+        strncpy(newline, "\0", 1);
+    newline = NULL;
 
     printf("\nIngrese su colonia: ");
     fflush(stdin);
     fgets(nuevoCliente.dir.colonia, sizeof(nuevoCliente.dir.colonia), stdin);
+    newline = strstr(nuevoCliente.dir.colonia, "\n");
+    if(newline != NULL)
+        strncpy(newline, "\0", 1);
+    newline = NULL;
 
     printf("\nIngrese el numero de domicilio: ");
     fflush(stdin);
@@ -163,6 +191,7 @@ int limpiarArchivo(void){
         printf("Error al abrir el archivo.");
         return 1;
     }
+    fclose(archivo);
     return 1;
 }
 
@@ -233,4 +262,103 @@ int eliminarCliente(void){
         }
     }
     fclose(archClientes);
+}
+
+//Consultas:
+//Consulta de cliente por nombre
+
+int consultaNom(void){
+    FILE *archClientes;
+    cliente coincidencia;
+    char nomjunto[200];
+    char *newline;
+    char nom[50];
+    int flag = 0;
+
+    archClientes = fopen("./bin/clientes.bin", "rb");
+    if (archClientes == NULL){
+        printf("Error al abrir el archivo de clientes...");
+        sleep(3);
+        return 1;
+    }
+
+    printf("\nIngrese el nombre del cliente a consultar: ");
+    fflush(stdin);
+    fgets(nom, sizeof(nom), stdin);
+    //Eliminar \n del nombre
+    newline = strstr(nom, "\n");
+    if(newline != NULL)
+        strncpy(newline, "\0", 1);
+    while(fread(&coincidencia, sizeof(cliente), 1, archClientes)>0){
+        //Reiniciar la variable nomjunto
+        strcpy(nomjunto, "");
+
+        //Juntamos el nombre del cliente en una sola direccion
+        strcat(nomjunto, coincidencia.nombre);
+        strcat(nomjunto, " ");
+        strcat(nomjunto, coincidencia.apellidoP);
+        strcat(nomjunto, " ");
+        strcat(nomjunto, coincidencia.apellidoM);
+
+        if((strcmp(coincidencia.nombre, nom))==0){
+            printf("\n\t\t\tComercializadora\n\n\t\t\tConsulta Por Cliente");
+            printf("\n\n\t\t\tPor Nombre");
+            printf("\nNombre\t\t\tClave\tDireccion\t\tTelefono\tCorreo Electronico\tEstatus");
+            printf("\n%s %s %s", coincidencia.nombre, coincidencia.apellidoP, coincidencia.apellidoM);
+            printf("\t%d", coincidencia.ID);
+            printf("\t%s %s %d %d", coincidencia.dir.colonia, coincidencia.dir.calle, coincidencia.dir.numero, coincidencia.dir.cp);
+            printf("\t%d", coincidencia.telefono);
+            printf("\t%s", coincidencia.correo);
+            printf("\t\t%s", (coincidencia.estatus)==1?"Activo\0":"Inactivo\0");
+            flag = 1;
+        }
+        else if ((strcmp(coincidencia.apellidoP, nom))==0){
+            printf("\n\t\t\tComercializadora\n\n\t\t\tConsulta Por Cliente");
+            printf("\n\n\t\t\tPor Nombre");
+            printf("\nNombre\t\t\tClave\tDireccion\t\tTelefono\tCorreo Electronico\tEstatus");
+            printf("\n%s %s %s", coincidencia.nombre, coincidencia.apellidoP, coincidencia.apellidoM);
+            printf("\t%d", coincidencia.ID);
+            printf("\t%s %s %d %d", coincidencia.dir.colonia, coincidencia.dir.calle, coincidencia.dir.numero, coincidencia.dir.cp);
+            printf("\t%d", coincidencia.telefono);
+            printf("\t%s", coincidencia.correo);
+            printf("\t\t%s", (coincidencia.estatus)==1?"Activo\0":"Inactivo\0");
+            flag = 1;
+        }
+        else if ((strcmp(coincidencia.apellidoP, nom))==0){
+            printf("\n\t\t\tComercializadora\n\n\t\t\tConsulta Por Cliente");
+            printf("\n\n\t\t\tPor Nombre");
+            printf("\nNombre\t\t\tClave\tDireccion\t\tTelefono\tCorreo Electronico\tEstatus");
+            printf("\n%s %s %s", coincidencia.nombre, coincidencia.apellidoP, coincidencia.apellidoM);
+            printf("\t%d", coincidencia.ID);
+            printf("\t%s %s %d %d", coincidencia.dir.colonia, coincidencia.dir.calle, coincidencia.dir.numero, coincidencia.dir.cp);
+            printf("\t%d", coincidencia.telefono);
+            printf("\t%s", coincidencia.correo);
+            printf("\t\t%s", (coincidencia.estatus)==1?"Activo\0":"Inactivo\0");
+            flag = 1;
+        }
+        else if ((strcmp(nomjunto, nom))==0){
+            printf("\n\t\t\tComercializadora\n\n\t\t\tConsulta Por Cliente");
+            printf("\n\n\t\t\tPor Nombre");
+            printf("\nNombre\t\t\tClave\tDireccion\t\tTelefono\tCorreo Electronico\tEstatus");
+            printf("\n%s %s %s", coincidencia.nombre, coincidencia.apellidoP, coincidencia.apellidoM);
+            printf("\t%d", coincidencia.ID);
+            printf("\t%s %s %d %d", coincidencia.dir.colonia, coincidencia.dir.calle, coincidencia.dir.numero, coincidencia.dir.cp);
+            printf("\t%d", coincidencia.telefono);
+            printf("\t%s", coincidencia.correo);
+            printf("\t\t%s", (coincidencia.estatus)==1?"Activo\0":"Inactivo\0");
+            flag = 1;
+        }
+        else if (flag == 0){
+            printf("\nNo se encontraron coincidencias.");
+            break;
+        }
+    }
+    fclose(archClientes);
+    return 0;
+}
+
+//Consulta Clave
+//Queda pendiente, pronto trabajare en ella
+int consultaClav(void){
+
 }
