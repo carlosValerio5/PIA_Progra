@@ -4,6 +4,29 @@
 #include <string.h>
 
 
+//Estructuras que se van a utilizar
+struct datosDireccion{
+	char calle[40];
+	char colonia[40];
+	int numero;
+	int cp;
+};
+
+
+typedef struct datos_Usuarios{
+	int id;
+	char nombre[20];
+	char apellidoP[20];
+	char apellidoM[20];
+	char correo[60];
+	char nombreUsuario[30];
+	char contra[20];
+	struct datosDireccion direccion;
+	int status;
+	int tipoUsuario;
+}dataU;
+
+
 int menuUsuarios(void)
 {
 	setlocale(LC_ALL, "spanish");
