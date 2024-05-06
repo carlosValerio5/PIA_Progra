@@ -42,3 +42,31 @@ int menuUsuarios(void)
 	return op;
 	
 }
+
+
+void nuevoU(dataU *usuarioF)//Proceso de lectura de datos para el apartado de nuevo usuario
+{
+	setlocale(LC_ALL, "spanish");
+	
+	system("cls");
+	printf("\nIngrese los datos solicitados \nNombre: ");
+	fgets(*usuarioF->nombre,20,stdin);
+	printf("\nApellido Paterno: ");
+	fgets(*usuarioF->apellidoP,20,stdin);
+	printf("\nApellido Materno: ");
+	fgets(*usuarioF->apellidoM,20,stdin);
+	printf("\nCorreo: ");
+	fgets(*usuarioF->correo,60,stdin);
+	printf("\nNombre de Usuario: ");
+	fgets(*usuarioF->nombreUsuario,30,stdin);
+	printf("\nContraseña: ");
+	fgets(*usuarioF->contra,20,stdin);
+	printf("\nCalle: ");
+	fgets(*usuarioF->direccion.calle,20,stdin);
+	printf("\nColonia: ");
+	fgets(*usuarioF->direccion.colonia,20,stdin);
+	printf("\nNúmero: ");
+	scanf("%d", &(usuarioF->direccion.numero));
+	printf("\nCodigo Postal: ");
+	scanf("%d", &(usuarioF->direccion.cp));
+}
