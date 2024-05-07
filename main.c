@@ -7,7 +7,7 @@ int main(){
     
     printf("Hola jeje");
     // Apartado de ventas (Esto va dentro de un switch op 3)
-    /*int op;
+    int op;
     op = menuVentas(); // Tomara la opcion que eligio el usuario del Primer menu de ventas
     switch (op)
     {
@@ -24,8 +24,7 @@ int main(){
         break;
         case 3:
         break;
-    }*/
-    consultaNom();
-     
+    }
+
     return 0;
 }

@@ -33,6 +33,6 @@ int clienteEliminar(void);
 
 int consultaNom(void);
 
-int consultaClav(void);
+void consultaClav(cliente *);
 
 #endif

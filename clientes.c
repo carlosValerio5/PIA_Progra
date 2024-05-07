@@ -319,7 +319,7 @@ int consultaNom(void){
         }
         else if ((strcmp(coincidencia.apellidoP, nom))==0){
             printf("\n\t\t\tComercializadora\n\n\t\t\tConsulta Por Cliente");
-            //Agregar fecha de la consulta
+            printf("\n%s", fecha);
             printf("\n\n\t\t\tPor Nombre");
             printf("\nNombre\t\t\tClave\tDireccion\t\tTelefono\tCorreo Electronico\tEstatus");
             printf("\n%s %s %s", coincidencia.nombre, coincidencia.apellidoP, coincidencia.apellidoM);
@@ -332,7 +332,7 @@ int consultaNom(void){
         }
         else if ((strcmp(coincidencia.apellidoP, nom))==0){
             printf("\n\t\t\tComercializadora\n\n\t\t\tConsulta Por Cliente");
-            //Agregar fecha de la consulta
+            printf("\n%s", fecha);
             printf("\n\n\t\t\tPor Nombre");
             printf("\nNombre\t\t\tClave\tDireccion\t\tTelefono\tCorreo Electronico\tEstatus");
             printf("\n%s %s %s", coincidencia.nombre, coincidencia.apellidoP, coincidencia.apellidoM);
@@ -345,7 +345,7 @@ int consultaNom(void){
         }
         else if ((strcmp(nomjunto, nom))==0){
             printf("\n\t\t\tComercializadora\n\n\t\t\tConsulta Por Cliente");
-            //Agregar fecha de la consulta
+            printf("\n%s", fecha);
             printf("\n\n\t\t\tPor Nombre");
             printf("\nNombre\t\t\tClave\tDireccion\t\tTelefono\tCorreo Electronico\tEstatus");
             printf("\n%s %s %s", coincidencia.nombre, coincidencia.apellidoP, coincidencia.apellidoM);
@@ -354,19 +354,55 @@ int consultaNom(void){
             printf("\t%d", coincidencia.telefono);
             printf("\t%s", coincidencia.correo);
             printf("\t\t%s", (coincidencia.estatus)==1?"Activo\0":"Inactivo\0");
-            flag = 1;
+            flag =1;
         }
-        else if (flag == 0){
-            printf("\nNo se encontraron coincidencias.");
-            break;
-        }
+    }
+    if (flag == 0){
+        printf("\nNo se encontraron coincidencias.");
     }
     fclose(archClientes);
     return 0;
 }
 
 //Consulta Clave
-//Queda pendiente, pronto trabajare en ella
-int consultaClav(void){
+//Debe proporcionarse el puntero a una estructura de tipo cliente
+//esto debido a que es necesario para almacenar los resultados de la busqueda
+void consultaClav(cliente *resultado){
+    FILE *archClientes;
+    int idbusqueda;
+    char fecha[11];
+    int flag = 0;
 
+    archClientes = fopen("./bin/clientes.bin", "rb");
+    if (archClientes == NULL){
+        printf("\nError al abrir el archivo.");
+        return;
+    }
+
+    printf("\nIngrese el ID del cliente a buscar: ");
+    fflush(stdin);
+    scanf("%d", &idbusqueda);
+
+    obtener_fecha(fecha, sizeof(fecha));
+
+    while(fread(resultado, sizeof(cliente), 1, archClientes)!= 0){
+        if (idbusqueda == resultado->ID){
+            printf("\n\t\t\tComercializadora\n\n\t\t\tConsulta Por Cliente");
+            printf("\n%s", fecha);
+            printf("\n\n\t\t\tPor Clave");
+            printf("\nNombre\t\t\tClave\tDireccion\t\tTelefono\tCorreo Electronico\tEstatus");
+            printf("\n%s %s %s", resultado->nombre, resultado->apellidoP, resultado->apellidoM);
+            printf("\t%d", resultado->ID);
+            printf("\t%s %s %d %d", resultado->dir.colonia, resultado->dir.calle, resultado->dir.numero, resultado->dir.cp);
+            printf("\t%d", resultado->telefono);
+            printf("\t%s", resultado->correo);
+            printf("\t\t%s", (resultado->estatus)==1?"Activo\0":"Inactivo\0");
+            flag = 1;
+            break;
+        }
+    }
+    if (flag == 0){
+        printf("\nNo se encontraron resultados.");
+    }
+    return;
 }
