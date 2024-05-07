@@ -73,5 +73,21 @@ void nuevoU(dataU *usuarioF)//Proceso de lectura de datos para el apartado de nu
 	scand("%d", &(usuarioF->status));
 	printf("Ingresa el tipo de usuario (1 = Administrador / 0 = Ventas)");
 	scand("%d", &(usuarioF->tipoUsuario));
+
+	//Para sacar el ID tendremos que leer el archivo y ver cual ID fue el ultimo en ser agregado
+	FILE *archivo = fopen("usuarios/usuariosData.bin", "rb");
+	// Leer la estructura del archivo
+	dataU us;
+	fread(&us, sizeof(dataU), 1, archivo);
+	while(!feof(archivo))
+	{
+		fread(&us, sizeof(dataU), 1, archivo);
+		if (feof(archivo)) {
+            		break;
+        	}
+        
+	}
+	usuarioF->id = us.id+1;
+	fclose(archivo);
 	
 }
