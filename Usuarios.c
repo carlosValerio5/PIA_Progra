@@ -47,7 +47,7 @@ int menuUsuarios(void)
 void nuevoU(dataU *usuarioF)//Proceso de lectura de datos para el apartado de nuevo usuario (INCOMPLETO)
 {
 	setlocale(LC_ALL, "spanish");
-	
+	fflush(stdin);
 	system("cls");
 	printf("\nIngrese los datos solicitados \nNombre: ");
 	fgets(*usuarioF->nombre,20,stdin);
