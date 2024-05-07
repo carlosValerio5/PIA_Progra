@@ -5,12 +5,50 @@
 
 int main(){
     
+    //Apartado para crear la carpera de usuarios y el archivo con los datos respectivos del usuario1____________________________________________________________________
+    //Comprobacion y creacion de la carpeta "usuarios"
+	const char *carpeta = "usuarios";
+	struct stat st;
+	if(stat(carpeta, &st) == -1)
+	{
+		mkdir(carpeta);
+	}
+	
+	
+	//Comprobacion y creacion del archivo "UsuariosData"
+	const char *nombreArchivo = "usuarios/usuariosData.bin";
 
+	if (stat(nombreArchivo, &st) == 0) {
+        // El archivo ya existe
+    } else {
+        // El archivo no existe, crearlo
+        FILE *archivo = fopen(nombreArchivo, "wb");
+        
+        //Poner al usuario Principal
+        dataU usP;
+        usP.id= 1;
+		strcpy(usP.nombre,"Guillermo");
+		strcpy(usP.apellidoP,"Bautista");
+		strcpy(usP.apellidoM,"Hernandez");
+		strcpy(usP.correo, "guille@gmail.com");
+		strcpy(usP.nombreUsuario,"GuillermoBta");
+		strcpy(usP.contra,"Guille123");
+		strcpy(usP.direccion.calle,"Calle 1");
+		strcpy(usP.direccion.colonia,"Colonia 1");
+		usP.direccion.numero = 1083;
+		usP.direccion.cp = 64280;
+		usP.status = 1;
+		usP.tipoUsuario = 1;
 
+		fwrite(&usP,sizeof(dataU), 1, archivo);
+		fclose(archivo);
+//___________________________________________________________________________________________________________________________________
 
 
     
     printf("Hola jeje");
+
+    
 
 
 
@@ -35,6 +73,8 @@ int main(){
         break;
         //____________________________________________________________________________________________________________
     }
+
+    
 
 
 
