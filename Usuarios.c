@@ -69,4 +69,9 @@ void nuevoU(dataU *usuarioF)//Proceso de lectura de datos para el apartado de nu
 	scanf("%d", &(usuarioF->direccion.numero));
 	printf("\nCodigo Postal: ");
 	scanf("%d", &(usuarioF->direccion.cp));
+	printf("Ingresa el status (1 = Activo / 0 = Inactivo)");
+	scand("%d", &(usuarioF->status));
+	printf("Ingresa el tipo de usuario (1 = Administrador / 0 = Ventas)");
+	scand("%d", &(usuarioF->tipoUsuario));
+	
 }
