@@ -2,9 +2,10 @@
 #include "clientes.h"
 #include <ctype.h>
 #include <stdlib.h>
-#include <pthread.h>
 #include <string.h>
 #include <unistd.h> //libreria para el sleep
+
+#include "VentasF.h" //Para obtener fecha
 
 
 //Sirve para registrar a un nuevo cliente
@@ -274,6 +275,9 @@ int consultaNom(void){
     char *newline;
     char nom[50];
     int flag = 0;
+    char fecha[11];
+
+    obtener_fecha(fecha, sizeof(fecha));
 
     archClientes = fopen("./bin/clientes.bin", "rb");
     if (archClientes == NULL){
@@ -302,6 +306,7 @@ int consultaNom(void){
 
         if((strcmp(coincidencia.nombre, nom))==0){
             printf("\n\t\t\tComercializadora\n\n\t\t\tConsulta Por Cliente");
+            printf("\n%s", fecha);
             printf("\n\n\t\t\tPor Nombre");
             printf("\nNombre\t\t\tClave\tDireccion\t\tTelefono\tCorreo Electronico\tEstatus");
             printf("\n%s %s %s", coincidencia.nombre, coincidencia.apellidoP, coincidencia.apellidoM);
@@ -314,6 +319,7 @@ int consultaNom(void){
         }
         else if ((strcmp(coincidencia.apellidoP, nom))==0){
             printf("\n\t\t\tComercializadora\n\n\t\t\tConsulta Por Cliente");
+            //Agregar fecha de la consulta
             printf("\n\n\t\t\tPor Nombre");
             printf("\nNombre\t\t\tClave\tDireccion\t\tTelefono\tCorreo Electronico\tEstatus");
             printf("\n%s %s %s", coincidencia.nombre, coincidencia.apellidoP, coincidencia.apellidoM);
@@ -326,6 +332,7 @@ int consultaNom(void){
         }
         else if ((strcmp(coincidencia.apellidoP, nom))==0){
             printf("\n\t\t\tComercializadora\n\n\t\t\tConsulta Por Cliente");
+            //Agregar fecha de la consulta
             printf("\n\n\t\t\tPor Nombre");
             printf("\nNombre\t\t\tClave\tDireccion\t\tTelefono\tCorreo Electronico\tEstatus");
             printf("\n%s %s %s", coincidencia.nombre, coincidencia.apellidoP, coincidencia.apellidoM);
@@ -338,6 +345,7 @@ int consultaNom(void){
         }
         else if ((strcmp(nomjunto, nom))==0){
             printf("\n\t\t\tComercializadora\n\n\t\t\tConsulta Por Cliente");
+            //Agregar fecha de la consulta
             printf("\n\n\t\t\tPor Nombre");
             printf("\nNombre\t\t\tClave\tDireccion\t\tTelefono\tCorreo Electronico\tEstatus");
             printf("\n%s %s %s", coincidencia.nombre, coincidencia.apellidoP, coincidencia.apellidoM);

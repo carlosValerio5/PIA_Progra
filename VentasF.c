@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
-
+#include <time.h>
+#include "VentasF.h"
 
 
 void obtener_fecha(char *fecha_strF, size_t max_len) //Funcion para obtener una fecha en formato string
