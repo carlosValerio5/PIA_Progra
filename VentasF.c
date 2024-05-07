@@ -6,7 +6,7 @@
 
 
 void obtener_fecha(char *fecha_strF, size_t max_len) //Funcion para obtener una fecha en formato string
-{
+{//Si se quiere usar la funcion tienes que mandarle como argumentos la cadena donde se va a guardar(Longitud minima de 11) y un entero con valor minimo de  11
 	//Obtenemos la fecha
 	time_t t = time(NULL);
     	struct tm *fecha_actual = localtime(&t);
