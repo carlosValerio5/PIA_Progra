@@ -70,9 +70,9 @@ void nuevoU(dataU *usuarioF)//Proceso de lectura de datos para el apartado de nu
 	printf("\nCodigo Postal: ");
 	scanf("%d", &(usuarioF->direccion.cp));
 	printf("Ingresa el status (1 = Activo / 0 = Inactivo)");
-	scand("%d", &(usuarioF->status));
+	scanf("%d", &(usuarioF->status));
 	printf("Ingresa el tipo de usuario (1 = Administrador / 0 = Ventas)");
-	scand("%d", &(usuarioF->tipoUsuario));
+	scanf("%d", &(usuarioF->tipoUsuario));
 
 	//Para sacar el ID tendremos que leer el archivo y ver cual ID fue el ultimo en ser agregado
 	FILE *archivo = fopen("usuarios/usuariosData.bin", "rb");
