@@ -169,7 +169,7 @@ void EliminarUsuario(void) //Funcion para eliminar el usuario
 		if(op == 1){
 			return;
 		}else{
-			EliminarUsuario();
+			EliminarUsuario();//LLamamos a la misma funcion para que vuelva hacer el proceseso
 			return;
 		}
 	}else{
@@ -205,5 +205,75 @@ void EliminarUsuario(void) //Funcion para eliminar el usuario
 }
 
 
+
+void reactivarUsuario(void) //Funcion para activar el usuario (SIMILAR A ELIMINAR)
+{
+	system("cls");
+	fflush(stdin);
+	int op;
+	char nombre[20];
+	printf("\nIngresa el nombre del usuario que desea actualizar: ");
+	fgets(nombre, 20, stdin);
+	nombre[strcspn(nombre, "\n")] = '\0';
+	
+	//buscamos si el nombre existe
+	FILE *archivo = fopen("usuarios/usuariosData.bin","rb");
+	dataU usuario;
+	int i=0;
+	
+	while(fread(&usuario, sizeof(dataU), 1, archivo) ==1)
+	{
+
+		if(strcmp(nombre,usuario.nombre) ==0 )
+		{
+			i= 1;
+		}
+	}
+	fclose(archivo);
+	
+	//Proceso cambio de status
+	if(i==0)
+	{
+		printf("\nNo se encontro un usuario con ese nombre");
+		printf("\nDesea realizar una nueva busqueda (Si = 0 / No = 1)? ");
+		scanf("%d", &op);
+		Sleep(1);
+		if(op == 1){
+			return;
+		}else{
+			reactivarUsuario();
+			return;
+		}
+	}else{
+		FILE *archivos = fopen("usuarios/usuariosData.bin","rb+");
+		rewind(archivos);
+		while(!feof(archivo))
+		{
+			fread(&usuario, sizeof(dataU), 1, archivo);
+			//Cambio de status
+			if(strcmp(nombre,usuario.nombre) ==0  && usuario.status !=1)
+			{
+				printf("\nDesea dar de activar el usuario (Si = 0 / No = 1)? ");
+				scanf("%d", &op);
+				if(op == 0){
+					usuario.status = 1;//Cambiamos el status
+					fseek(archivos, -(long)sizeof(dataU),SEEK_CUR);//Nos movemos a la posicion de la estructura a modificar
+					fwrite(&usuario, sizeof(dataU), 1, archivos);
+					printf("\nUsuario actualizado con exito");
+					Sleep(1);
+					break;
+				}else{
+					break;
+				}
+				
+			}else if(strcmp(nombre,usuario.nombre) ==0  && usuario.status ==1){
+				printf("\nEl usuario no esta dado de baja");
+				Sleep(1);
+				break;
+			}
+		}
+		fclose(archivos);
+	}
+}
 
 
