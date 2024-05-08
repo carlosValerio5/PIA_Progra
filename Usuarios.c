@@ -146,7 +146,6 @@ void EliminarUsuario(void) //Funcion para eliminar el usuario
 	
 	while(fread(&usuario, sizeof(dataU), 1, archivo) ==1)
 	{
-		//fread(&usuario, sizeof(dataU), 1, archivo);
 		printf("\n%s \n%s", nombre, usuario.nombre);
 		if(strcmp(nombre,usuario.nombre) ==0 )
 		{
