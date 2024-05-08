@@ -133,7 +133,7 @@ void EliminarUsuario(void) //Funcion para eliminar el usuario
 {
 	system("cls");
 	fflush(stdin);
-	
+	int op;
 	char nombre[20];
 	printf("\nIngresa el nombre del usuario que desea eliminar: ");
 	fgets(nombre, 20, stdin);
@@ -158,6 +158,12 @@ void EliminarUsuario(void) //Funcion para eliminar el usuario
 	if(i==0)
 	{
 		printf("\nNo se encontro un usuario con ese nombre");
+		printf("\nDesea realizar una nueva busqueda (Si = 0 / No = 1)? ");
+		scanf("%d", &op);
+		if(op == 1){
+			return;
+		}else{
+		}
 	}else{
 		FILE *archivos = fopen("usuarios/usuariosData.bin","rb+");
 		rewind(archivos);
