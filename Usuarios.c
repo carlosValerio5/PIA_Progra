@@ -44,10 +44,8 @@ int menuUsuarios(void)
 }
 
 
-void nuevoU()//Funcion para agregar un nuevo usuario (Probablemente se puede modificar para que no reciba nada )
+void nuevoU()
 {
-	
-	
     	setlocale(LC_ALL, "spanish");
     	system("cls");
 	dataU usuarioF;
@@ -61,37 +59,37 @@ void nuevoU()//Funcion para agregar un nuevo usuario (Probablemente se puede mod
     	printf("\nApellido Paterno: ");
     	fflush(stdin);
     	fgets(usuarioF.apellidoP, 20, stdin);
-    	usuarioF.apellidoP[strcspn(usuarioF.apellidoP, "\n")] = '\0'; // Eliminar el salto de línea
+    	usuarioF.apellidoP[strcspn(usuarioF.apellidoP, "\n")] = '\0';
 
     	printf("\nApellido Materno: ");
     	fflush(stdin);
     	fgets(usuarioF.apellidoM, 20, stdin);
-    	usuarioF.apellidoM[strcspn(usuarioF.apellidoM, "\n")] = '\0'; // Eliminar el salto de línea
+    	usuarioF.apellidoM[strcspn(usuarioF.apellidoM, "\n")] = '\0'; 
 
     	printf("\nCorreo: ");
     	fflush(stdin);
     	fgets(usuarioF.correo, 60, stdin);
-    	usuarioF.correo[strcspn(usuarioF.correo, "\n")] = '\0'; // Eliminar el salto de línea
+    	usuarioF.correo[strcspn(usuarioF.correo, "\n")] = '\0';
 
     	printf("\nNombre de Usuario: ");
     	fflush(stdin);
     	fgets(usuarioF.nombreUsuario, 30, stdin);
-    	usuarioF.nombreUsuario[strcspn(usuarioF.nombreUsuario, "\n")] = '\0'; // Eliminar el salto de línea
+    	usuarioF.nombreUsuario[strcspn(usuarioF.nombreUsuario, "\n")] = '\0'; 
 
     	printf("\nContraseña: ");
     	fflush(stdin);
     	fgets(usuarioF.contra, 20, stdin);
-    	usuarioF.contra[strcspn(usuarioF.contra, "\n")] = '\0'; // Eliminar el salto de línea
+    	usuarioF.contra[strcspn(usuarioF.contra, "\n")] = '\0'; 
 
     	printf("\nCalle: ");
     	fflush(stdin);
     	fgets(usuarioF.direccion.calle, 20, stdin);
-    	usuarioF.direccion.calle[strcspn(usuarioF.direccion.calle, "\n")] = '\0'; // Eliminar el salto de línea
+    	usuarioF.direccion.calle[strcspn(usuarioF.direccion.calle, "\n")] = '\0';
 
     	printf("\nColonia: ");
     	fflush(stdin);
     	fgets(usuarioF.direccion.colonia, 20, stdin);
-    	usuarioF.direccion.colonia[strcspn(usuarioF.direccion.colonia, "\n")] = '\0'; // Eliminar el salto de línea
+    	usuarioF.direccion.colonia[strcspn(usuarioF.direccion.colonia, "\n")] = '\0';
 
     	printf("\nNúmero: ");
     	fflush(stdin);
