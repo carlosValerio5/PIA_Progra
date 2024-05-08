@@ -2,6 +2,9 @@
 #include <locale.h>
 #include <stdlib.h>
 #include <string.h>
+#include<windows.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 
 //Estructuras que se van a utilizar
@@ -38,6 +41,7 @@ int menuUsuarios(void)
 		printf("\n\t1.- Nuevo Usuario\n\t2.- Eliminar Usuario\n\t3.- Activar Usuario\n\t4.- Regresar Menú Principal");
 		printf("\nSeleccione una opción: ");
 		scanf("%d", &op);
+		Sleep(1);
 	}while(op <=0 || op >4);
 	return op;
 	
@@ -126,6 +130,8 @@ void nuevoU()
     	FILE *archivos = fopen("usuarios/usuariosData.bin", "ab");
     	fwrite(&usuarioF, sizeof(dataU), 1, archivos);
     	fclose(archivos);
+	printf("\nUsuario agregado");
+	Sleep(2);
 }
 
 
@@ -160,9 +166,12 @@ void EliminarUsuario(void) //Funcion para eliminar el usuario
 		printf("\nNo se encontro un usuario con ese nombre");
 		printf("\nDesea realizar una nueva busqueda (Si = 0 / No = 1)? ");
 		scanf("%d", &op);
+		Sleep(1);
 		if(op == 1){
 			return;
 		}else{
+			EliminarUsuario();
+			return;
 		}
 	}else{
 		FILE *archivos = fopen("usuarios/usuariosData.bin","rb+");
@@ -171,13 +180,25 @@ void EliminarUsuario(void) //Funcion para eliminar el usuario
 		{
 			fread(&usuario, sizeof(dataU), 1, archivo);
 			//Cambio de status
-			if(strcmp(nombre,usuario.nombre) ==0 )
+			if(strcmp(nombre,usuario.nombre) ==0  && usuario.status !=0)
 			{
-				usuario.status = 0;//Cambiamos el status
-				fseek(archivos, -(long)sizeof(dataU),SEEK_CUR);//Nos movemos a la posicion de la estructura a modificar
-				fwrite(&usuario, sizeof(dataU), 1, archivos);
-				break;
+				printf("\nDesea dar de bajar al usuario (Si = 0 / No = 1)? ");
+				scanf("%d", &op);
+				if(op == 0){
+					usuario.status = 0;//Cambiamos el status
+					fseek(archivos, -(long)sizeof(dataU),SEEK_CUR);//Nos movemos a la posicion de la estructura a modificar
+					fwrite(&usuario, sizeof(dataU), 1, archivos);
+					printf("\nUsuario eliminado con exito");
+					Sleep(1);
+					break;
+				}else{
+					break;
+				}
 				
+			}else if(strcmp(nombre,usuario.nombre) ==0  && usuario.status ==0){
+				printf("\nEl usuario ya esta dado de baja");
+				Sleep(1);
+				break;
 			}
 		}
 		fclose(archivos);
