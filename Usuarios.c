@@ -29,86 +29,85 @@ int menuUsuarios(void)
 
 void nuevoU()
 {
-    	setlocale(LC_ALL, "spanish");
-    	system("cls");
+    setlocale(LC_ALL, "spanish");
+    system("cls");
 	dataU usuarioF;
     // Limpiar el búfer de entrada antes de la primera lectura
 	fflush(stdin);
 	
 	printf("\nIngrese los datos solicitados \nNombre: ");
-    	fgets(usuarioF.nombre, 20, stdin);
-    	usuarioF.nombre[strcspn(usuarioF.nombre, "\n")] = '\0'; // Eliminar el salto de línea
+    fgets(usuarioF.nombre, 20, stdin);
+    usuarioF.nombre[strcspn(usuarioF.nombre, "\n")] = '\0'; // Eliminar el salto de línea
 
-    	printf("\nApellido Paterno: ");
-    	fflush(stdin);
-    	fgets(usuarioF.apellidoP, 20, stdin);
-    	usuarioF.apellidoP[strcspn(usuarioF.apellidoP, "\n")] = '\0';
+    printf("\nApellido Paterno: ");
+    fflush(stdin);
+	fgets(usuarioF.apellidoP, 20, stdin);
+    usuarioF.apellidoP[strcspn(usuarioF.apellidoP, "\n")] = '\0';
 
-    	printf("\nApellido Materno: ");
-    	fflush(stdin);
-    	fgets(usuarioF.apellidoM, 20, stdin);
-    	usuarioF.apellidoM[strcspn(usuarioF.apellidoM, "\n")] = '\0'; 
+    printf("\nApellido Materno: ");
+    fflush(stdin);
+    fgets(usuarioF.apellidoM, 20, stdin);
+    usuarioF.apellidoM[strcspn(usuarioF.apellidoM, "\n")] = '\0'; 
 
-    	printf("\nCorreo: ");
-    	fflush(stdin);
-    	fgets(usuarioF.correo, 60, stdin);
-    	usuarioF.correo[strcspn(usuarioF.correo, "\n")] = '\0';
+    printf("\nCorreo: ");
+    fflush(stdin);
+    fgets(usuarioF.correo, 60, stdin);
+    usuarioF.correo[strcspn(usuarioF.correo, "\n")] = '\0';
 
-    	printf("\nNombre de Usuario: ");
-    	fflush(stdin);
-    	fgets(usuarioF.nombreUsuario, 30, stdin);
-    	usuarioF.nombreUsuario[strcspn(usuarioF.nombreUsuario, "\n")] = '\0'; 
+    printf("\nNombre de Usuario: ");
+    fflush(stdin);
+    fgets(usuarioF.nombreUsuario, 30, stdin);
+    usuarioF.nombreUsuario[strcspn(usuarioF.nombreUsuario, "\n")] = '\0'; 
 
-    	printf("\nContraseña: ");
-    	fflush(stdin);
-    	fgets(usuarioF.contra, 20, stdin);
-    	usuarioF.contra[strcspn(usuarioF.contra, "\n")] = '\0'; 
+    printf("\nContraseña: ");
+    fflush(stdin);
+    fgets(usuarioF.contra, 20, stdin);
+    usuarioF.contra[strcspn(usuarioF.contra, "\n")] = '\0'; 
+	printf("\nCalle: ");
+    fflush(stdin);
+    fgets(usuarioF.direccion.calle, 20, stdin);
+    usuarioF.direccion.calle[strcspn(usuarioF.direccion.calle, "\n")] = '\0';
 
-    	printf("\nCalle: ");
-    	fflush(stdin);
-    	fgets(usuarioF.direccion.calle, 20, stdin);
-    	usuarioF.direccion.calle[strcspn(usuarioF.direccion.calle, "\n")] = '\0';
+    printf("\nColonia: ");
+    fflush(stdin);
+    fgets(usuarioF.direccion.colonia, 20, stdin);
+    usuarioF.direccion.colonia[strcspn(usuarioF.direccion.colonia, "\n")] = '\0';
 
-    	printf("\nColonia: ");
-    	fflush(stdin);
-    	fgets(usuarioF.direccion.colonia, 20, stdin);
-    	usuarioF.direccion.colonia[strcspn(usuarioF.direccion.colonia, "\n")] = '\0';
-
-    	printf("\nNúmero: ");
-    	fflush(stdin);
-    	scanf("%d", &(usuarioF.direccion.numero));
+    printf("\nNúmero: ");
+    fflush(stdin);
+    scanf("%d", &(usuarioF.direccion.numero));
     
-    	printf("\nCodigo Postal: ");
-    	fflush(stdin);
-    	scanf("%d", &(usuarioF.direccion.cp));
+    printf("\nCodigo Postal: ");
+    fflush(stdin);
+    scanf("%d", &(usuarioF.direccion.cp));
 
-    	printf("Ingresa el status (1 = Activo / 0 = Inactivo): ");
-    	fflush(stdin);
-    	scanf("%d", &(usuarioF.status));
+    printf("Ingresa el status (1 = Activo / 0 = Inactivo): ");
+    fflush(stdin);
+    scanf("%d", &(usuarioF.status));
 
-    	printf("Ingresa el tipo de usuario (1 = Administrador / 0 = Ventas): ");
-    	fflush(stdin);
-    	scanf("%d", &(usuarioF.tipoUsuario));
+    printf("Ingresa el tipo de usuario (1 = Administrador / 0 = Ventas): ");
+    fflush(stdin);
+    scanf("%d", &(usuarioF.tipoUsuario));
 
     //Para sacar el ID tendremos que leer el archivo y ver cual ID fue el ultimo en ser agregado
-    	FILE *archivo = fopen("./usuarios/usuariosData.bin", "rb");
+    FILE *archivo = fopen("./usuarios/usuariosData.bin", "rb");
     // Leer la estructura del archivo
-    	dataU us;
-    	while(!feof(archivo))
-    	{
-	        fread(&us, sizeof(dataU), 1, archivo);
-	        if (feof(archivo)) 
-		    {
-            		break;
-        	}
-    	}
-    	usuarioF.id = us.id + 1;
-    	fclose(archivo);
+    dataU us;
+    while(!feof(archivo))
+    {
+		fread(&us, sizeof(dataU), 1, archivo);
+		if (feof(archivo)) 
+		{
+			break;
+        }
+    }
+    usuarioF.id = us.id + 1;
+    fclose(archivo);
 
-    	//Ahora pondremos los datos en el archivo
-    	FILE *archivos = fopen("usuarios/usuariosData.bin", "ab");
-    	fwrite(&usuarioF, sizeof(dataU), 1, archivos);
-    	fclose(archivos);
+    //Ahora pondremos los datos en el archivo
+    FILE *archivos = fopen("usuarios/usuariosData.bin", "ab");
+    fwrite(&usuarioF, sizeof(dataU), 1, archivos);
+    fclose(archivos);
 	printf("\nUsuario agregado");
 	Sleep(2);
 }
