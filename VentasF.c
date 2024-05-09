@@ -61,7 +61,7 @@ int consultaClav2(cliente *resultado){
     char fecha[11];
     int flag = 0;
 
-    archClientes = fopen("./bin/clientes.bin", "rb");
+    archClientes = fopen("./bin/clientes.bin", "wb");
     if (archClientes == NULL){
         printf("\nError al abrir el archivo.");
         return 0;
