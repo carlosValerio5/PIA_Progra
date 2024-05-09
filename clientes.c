@@ -3,7 +3,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h> //libreria para el sleep
+#include <windows.h> //libreria para el Sleep
 
 #include "VentasF.h" //Para obtener fecha
 
@@ -225,13 +225,13 @@ int eliminarCliente(void){
                 //Regresa el puntero del archivo un espacio atras para sobreescribir
                 if(fseek(archClientes, -(long)(sizeof(cliente)), SEEK_CUR) != 0){
                     printf("Error al actualizar los cambios, intente de nuevo...");
-                    sleep(3);
+                    Sleep(3);
                     return 1;
                 }
                 //reescribe la informacion del cliente pero con el estatus actualizado
                 if ((fwrite(&clseleccionado, sizeof(cliente), 1, archClientes))!=1){
                     printf("Error al actualizar los cambios, intente de nuevo...");
-                    sleep(3);
+                    Sleep(3);
                     return 1;
                 }
                 else{
@@ -282,7 +282,7 @@ int consultaNom(void){
     archClientes = fopen("./bin/clientes.bin", "rb");
     if (archClientes == NULL){
         printf("Error al abrir el archivo de clientes...");
-        sleep(3);
+        Sleep(3);
         return 1;
     }
 
@@ -404,5 +404,6 @@ void consultaClav(cliente *resultado){
     if (flag == 0){
         printf("\nNo se encontraron resultados.");
     }
+    fclose(archClientes);
     return;
 }

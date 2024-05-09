@@ -5,30 +5,9 @@
 #include<windows.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include "usuarios.h"
 
-
-//Estructuras que se van a utilizar
-struct datosDireccion{
-	char calle[40];
-	char colonia[40];
-	int numero;
-	int cp;
-};
-
-
-typedef struct datos_Usuarios{
-	int id;
-	char nombre[20];
-	char apellidoP[20];
-	char apellidoM[20];
-	char correo[60];
-	char nombreUsuario[30];
-	char contra[20];
-	struct datosDireccion direccion;
-	int status;
-	int tipoUsuario;
-}dataU;
-
+//Borre las estructuras al principio de este archivo porque ya estan definidas dentro de el archivo usuarios.h
 
 int menuUsuarios(void)
 {
@@ -112,14 +91,14 @@ void nuevoU()
     	scanf("%d", &(usuarioF.tipoUsuario));
 
     //Para sacar el ID tendremos que leer el archivo y ver cual ID fue el ultimo en ser agregado
-    	FILE *archivo = fopen("usuarios/usuariosData.bin", "rb");
+    	FILE *archivo = fopen("./usuarios/usuariosData.bin", "rb");
     // Leer la estructura del archivo
     	dataU us;
     	while(!feof(archivo))
     	{
 	        fread(&us, sizeof(dataU), 1, archivo);
 	        if (feof(archivo)) 
-		{
+		    {
             		break;
         	}
     	}

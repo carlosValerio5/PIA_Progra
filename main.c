@@ -2,9 +2,10 @@
 #include <string.h>
 #include "clientes.c"
 #include "VentasF.c"
+#include "Usuarios.c"
+#include "login.c"
 
 int main(){
-    
     //Apartado para crear la carpera de usuarios y el archivo con los datos respectivos del usuario1____________________________________________________________________
     //Comprobacion y creacion de la carpeta "usuarios"
 	const char *carpeta = "usuarios";
@@ -38,47 +39,34 @@ int main(){
 		usP.direccion.numero = 1083;
 		usP.direccion.cp = 64280;
 		usP.status = 1;
-		usP.tipoUsuario = 1;
+		usP.tipoUsuario = 0;
 
 		fwrite(&usP,sizeof(dataU), 1, archivo);
 		fclose(archivo);
-//___________________________________________________________________________________________________________________________________
-
-
-    
-    printf("Hola jeje");
-
-    
-
-
-
-    
-    // Apartado de ventas (Esto va dentro de un switch op 3)______________________________________________________________
-    int op;
-    op = menuVentas(); // Tomara la opcion que eligio el usuario del Primer menu de ventas
-    switch (op)
-    {
-        case 1:
-        break;
-        case 2:
-            op = menuReporte();
-            if(op == 1)
-            {
-            }
-            else
-            {
-            }
-        break;
-        case 3:
-        break;
-        //____________________________________________________________________________________________________________
     }
-
-    
-
-
-
-
-    
+//___________________________________________________________________________________________________________________________________
+    if (!loginUsuario()){
+    // Apartado de ventas (Esto va dentro de un switch op 3)______________________________________________________________
+        /*int op;
+        op = menuVentas(); // Tomara la opcion que eligio el usuario del Primer menu de ventas
+        switch (op)
+        {
+            case 1:
+            break;
+            case 2:
+                op = menuReporte();
+                if(op == 1)
+                {
+                }
+                else
+                {
+                }
+            break;
+            case 3:
+            break;
+            //____________________________________________________________________________________________________________
+        }
+        */
+    }    
     return 0;
 }
