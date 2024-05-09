@@ -27,7 +27,7 @@ typedef struct datos_Usuarios {
     struct datosDireccion direccion;
     int status;
     int tipoUsuario;
-} dataU;
+}dataU;
 
 int menuUsuarios(void);
 void nuevoU(void);
