@@ -3,6 +3,23 @@
 #include <locale.h>
 #include <time.h>
 #include "./lib/VentasF.h"
+#include "./lib/clientes.h"
+
+#include <sys/stat.h>
+#include <sys/types.h>
+
+
+struct ventasData{
+  int folio;
+  long ID_Cliente;
+  int ID_Producto;
+  int cantidadC;
+  float precio;
+  char fecha[11];
+};
+
+
+
 
 
 void obtener_fecha(char *fecha_strF, size_t max_len) //Funcion para obtener una fecha en formato string
@@ -44,4 +61,63 @@ int menuReporte(void)
     scanf("%d", &op);
   }while(op != 1 && op !=2);
   return op;
+}
+
+//________________Agregado del 9 de mayo______________________
+
+int consultaClav2(cliente *resultado){
+    FILE *archClientes;
+    int idbusqueda;
+    char fecha[11];
+    int flag = 0;
+
+    archClientes = fopen("./bin/clientes.bin", "rb");
+    if (archClientes == NULL){
+        printf("\nError al abrir el archivo.");
+        return 0;
+    }
+
+    printf("\nIngrese el ID del cliente a buscar (Pulse 0 para regresar al submenu): ");
+    fflush(stdin);
+    scanf("%d", &idbusqueda);
+    if(idbusqueda == 0)
+    {
+      return 0;
+	}
+
+    obtener_fecha(fecha, sizeof(fecha));
+
+    while(fread(resultado, sizeof(cliente), 1, archClientes)!= 0){
+        if (idbusqueda == resultado->ID){
+            flag = 1;
+            break;
+        }
+    }
+    fclose(archClientes);
+    
+    if (flag == 0){
+        printf("\nNo se encontraron resultados.");
+        return consultaClav2(resultado);
+        
+    }
+    return flag;
+}
+
+
+void procesoVenta()
+{
+	cliente clienteV;	
+	if(consultaClav2(&clienteV) == 1)
+	{
+    struct stat st;
+    
+    const char *nombreArchivo = "bin/ventasG.bin";
+    if(stat(nombreArchivo, &st)== 0)
+    {
+
+    }else{
+      FILE *archivo = fopen(nombreArchivo,"wb");
+
+    }
+	}
 }
