@@ -2,23 +2,12 @@
 #include <stdlib.h>
 #include <locale.h>
 #include <time.h>
+#include <string.h>
 #include "./lib/VentasF.h"
 #include "./lib/clientes.h"
 
 #include <sys/stat.h>
 #include <sys/types.h>
-
-
-typedef struct ventasData{
-    int folio;
-    long ID_Cliente;
-    int ID_Producto;
-    int cantidadC;
-    float precio;
-    char fecha[11];
-} dataV;
-
-
 
 
 
@@ -136,5 +125,28 @@ void procesoTicket()
             venta.folio=1;
         }
     }
+}
+
+
+void ventasDiaActual()
+{
+    infoI datosExtras;
+    char fecha[11];
+    obtener_fecha(fecha, sizeof(fecha));
+    printf("\nReporte de ventas del dia actual:\n\n ");
+    printf("\n\t\t\t\tComercializadora Fuentes");
+    printf("\n\t\t\t   Reporte de Ventas al dia %s\n", fecha);
+    printf("%-8s%-20s%-10s%-12s%-9s%-9s\n", "Folio", "Cliente", "Subtotal", "Descuento", "IVA", "Total");
+    FILE *archDaEx= fopen("bin/datosExtras.bin", "rb");
+    while (fread(&datosExtras, sizeof(infoI),1, archDaEx)!=0)
+    {
+        if(strcmp(datosExtras.fecha, fecha) == 0)
+        {
+          printf("%-8s%-20s%-10s%-12s%-9s%-9s\n", datosExtras.folio, datosExtras.cliente,datosExtras.subtotal,datosExtras.descuento,datosExtras.iva, datosExtras.total );
+        }
+    }
+    
+    
+
 }
 
