@@ -39,7 +39,7 @@ int main(){
 		usP.direccion.numero = 1083;
 		usP.direccion.cp = 64280;
 		usP.status = 1;
-		usP.tipoUsuario = 0;
+		usP.tipoUsuario = 1;
 
 		fwrite(&usP,sizeof(dataU), 1, archivo);
 		fclose(archivo);
@@ -47,8 +47,8 @@ int main(){
 //___________________________________________________________________________________________________________________________________
     if (!loginUsuario()){
     // Apartado de ventas (Esto va dentro de un switch op 3)______________________________________________________________
-        /*int op;
-        op = menuVentas(); // Tomara la opcion que eligio el usuario del Primer menu de ventas
+        int op;
+        op = menuF(); // Tomara la opcion que eligio el usuario del Primer menu de ventas
         switch (op)
         {
             case 1:
@@ -66,7 +66,7 @@ int main(){
             break;
             //____________________________________________________________________________________________________________
         }
-        */
+        
     }    
     return 0;
 }
