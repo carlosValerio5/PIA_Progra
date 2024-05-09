@@ -1,11 +1,11 @@
 #include <stdio.h>
-#include "clientes.h"
+#include "./lib/clientes.h"
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
 #include <windows.h> //libreria para el Sleep
 
-#include "VentasF.h" //Para obtener fecha
+#include "./lib/VentasF.h" //Para obtener fecha
 
 
 //Sirve para registrar a un nuevo cliente

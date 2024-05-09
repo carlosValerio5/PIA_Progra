@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <windows.h>
-#include "login.h"
+#include "./lib/login.h"
 
 int loginUsuario(void){
     int intento = 0;

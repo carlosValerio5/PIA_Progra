@@ -5,7 +5,7 @@
 #include<windows.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include "usuarios.h"
+#include "./lib/usuarios.h"
 
 //Borre las estructuras al principio de este archivo porque ya estan definidas dentro de el archivo usuarios.h
 
