@@ -6,7 +6,7 @@
 
 //funcion para guardar productos
 void guardar_producto(Producto *producto) {
-    FILE *file = fopen("./bin/productos.bin", "ab");//modo para añadir
+    FILE *file = fopen("./bin/productos.bin", "ab");//modo para aÃ±adir
     if (file != NULL) {
         fwrite(producto, sizeof(Producto), 1, file);//guarda un producto2
         fclose(file);
@@ -112,7 +112,7 @@ void nuevo_producto(){
 }
 //funcion para editar producto: capturar clave unica de productgo,
 void editar_producto() {
-    Producto productos[100]; // Máximo 100 productos
+    Producto productos[100]; // MÃ¡ximo 100 productos
     int total = leer_productos(productos, 100);
     int clave, producto_encontrado = -1;
     int opcion;
@@ -138,7 +138,7 @@ void editar_producto() {
 
         if (producto_encontrado == -1) {
             printf("Producto no encontrado\n");
-            printf("¿Desea intentar de nuevo? (s/n): ");
+            printf("Â¿Desea intentar de nuevo? (s/n): ");
             char respuesta;
             fflush(stdin);
             scanf("%c", &respuesta);
@@ -311,6 +311,6 @@ void mostrar_menu() {
 }
 
 int main() {
-    mostrar_menu(); // Llama al menú principal al inicio del programa
-    return 0; // Devuelve 0 para indicar éxito
+    mostrar_menu(); // Llama al menÃº principal al inicio del programa
+    return 0; // Devuelve 0 para indicar Ã©xito
 }
