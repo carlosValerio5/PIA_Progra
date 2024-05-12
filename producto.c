@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h> // Para sleep
-#include "producto.h"
+#include "./lib/producto.h"
 
 //funcion para guardar productos
 void guardar_producto(Producto *producto) {
@@ -308,9 +308,4 @@ void mostrar_menu() {
             mostrar_menu();
             break;
     }
-}
-
-int main() {
-    mostrar_menu(); // Llama al menú principal al inicio del programa
-    return 0; // Devuelve 0 para indicar éxito
 }

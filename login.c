@@ -2,7 +2,7 @@
 #include <string.h>
 #include <windows.h>
 #include "./lib/login.h"
-//#include <windows.h>
+#include <windows.h>
 #include "./lib/Usuarios.h"
 
 int loginUsuario(void){
@@ -30,7 +30,7 @@ int loginUsuario(void){
             return 0;
     }
     printf("\nIntentos agotados, saliendo...");
-    Sleep(3);
+    Sleep(3000);
     return 1;
 }
 

@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <string.h>
 #include "clientes.c"
-#include "./lib/VentasF.h"
-#include "./lib/Usuarios.h"
+#include "VentasF.c"
+#include "Usuarios.c"
 #include "login.c"
+#include "producto.c"
 
 int main(){
     //Apartado para crear la carpera de usuarios y el archivo con los datos respectivos del usuario1____________________________________________________________________
@@ -45,7 +46,7 @@ int main(){
 		fclose(archivo);
     }
 //___________________________________________________________________________________________________________________________________
-    /* if (!loginUsuario()){
+     if (!loginUsuario()){
     // Apartado de ventas (Esto va dentro de un switch op 3)______________________________________________________________
         int op;
         op = menuF(); // Tomara la opcion que eligio el usuario del Primer menu de ventas
@@ -68,10 +69,10 @@ int main(){
             //____________________________________________________________________________________________________________
         }
         
-    }  */  
+    } 
 
 
-    int op1, op2;
+    /*int op1, op2;
     op1 = menuF();
     switch (op1)
     {
@@ -83,6 +84,6 @@ int main(){
     
     default:
         break;
-    }
+    }*/
     return 0;
 }

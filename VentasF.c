@@ -27,14 +27,13 @@ void obtener_fecha(char *fecha_strF, size_t max_len) //Funcion para obtener una 
 
 int menuF(void) //Esta funcion solo muestra el menu de ventas y retorna la opcion elegida
 {
-    system("cls");
+    //system("cls");
     setlocale(LC_ALL, "spanish");//Cambiamos el idioma a español REVISAR SI FUNCIONA EN TODAS LAS MAQUINAS
     int op;
-    system("cls");
+    //system("cls");
     do{
-
-        printf("\n\n\t1.- Venta\n\t2.- Reporte\n\t\t- Día\n\t\tCliente\n\t3.- Regresar al Menú Principal");
-        printf("\nSeleccione una opción: ");
+        printf("\n\n\t1.- Venta\n\t2.- Reporte\n\t\t- Dia\n\t\t-Cliente\n\t3.- Regresar al Menu Principal");
+        printf("\nSeleccione una opcion: ");
         scanf("%d", &op);
     } while(op > 3 || op <1);
     return op;
