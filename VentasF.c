@@ -5,6 +5,7 @@
 #include <string.h>
 #include "./lib/VentasF.h"
 #include "./lib/clientes.h"
+#include "producto.h"
 
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -52,7 +53,6 @@ int menuReporte(void)
     return op;
 }
 
-//________________Agregado del 9 de mayo______________________
 
 int consultaClav2(cliente *resultado){
 
@@ -94,11 +94,12 @@ int consultaClav2(cliente *resultado){
 }
 
 
+
+
 void procesoVenta(dataV *ventaF)
 {
     int cantidad, op;
-    printf("\nIngresa la cantidad que desea comprar");
-    scanf("%d", &cantidad);
+
 
 
     printf("\nDesea algo mas (Si = 1 / No =0) ? ");
@@ -108,15 +109,20 @@ void procesoVenta(dataV *ventaF)
 void procesoTicket()
 {
     dataV venta;
+    dataV ventaL;
     cliente clienteV;    
     if(consultaClav2(&clienteV) == 1)
     {
         struct stat st;
-  
         const char *nombreArchivo = "bin/ventasG.bin";
         if(stat(nombreArchivo, &st)== 0)
         {
-
+                FILE*archivoVentas = fopen(nombreArchivo, "rd");
+                while(fread(&ventaL, sizeof(dataV),1, archivoVentas) !=1)
+                {}
+                venta.folio = ventaL.folio+1;
+                obtener_fecha(venta.fecha, sizeof(venta.fecha));
+                procesoVenta(&venta);
         }
         else
         {
@@ -142,7 +148,7 @@ void ventasDiaActual()
     {
         if(strcmp(datosExtras.fecha, fecha) == 0)
         {
-          printf("%-8s%-20s%-10s%-12s%-9s%-9s\n", datosExtras.folio, datosExtras.cliente,datosExtras.subtotal,datosExtras.descuento,datosExtras.iva, datosExtras.total );
+            printf("%-8s%-20s%-10s%-12s%-9s%-9s\n", datosExtras.folio, datosExtras.cliente,datosExtras.subtotal,datosExtras.descuento,datosExtras.iva, datosExtras.total );
         }
     }
     
