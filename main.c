@@ -76,6 +76,8 @@ int main(){
     switch (op1)
     {
     case 1:
+        nuevoCliente();
+        nuevo_producto();
         procesoTicket();
         break;
     
