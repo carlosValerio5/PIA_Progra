@@ -16,7 +16,7 @@ struct datosDireccion {
     int cp;
 };
 
-typedef struct datos_Usuarios {
+typedef struct datos_Usuarios{
     int id;
     char nombre[20];
     char apellidoP[20];
@@ -28,6 +28,7 @@ typedef struct datos_Usuarios {
     int status;
     int tipoUsuario;
 }dataU;
+
 
 int menuUsuarios(void);
 void nuevoU(void);

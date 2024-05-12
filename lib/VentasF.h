@@ -39,8 +39,12 @@ int menuReporte(void);
 
 int consultaClav2(cliente *);
 
-void procesoVenta(dataV *);
+int consultaClavP(Producto *);
 
-void procesoTicket();
+void procesoVenta(dataV *, infoI *);
+
+void procesoTicket(void);
+
+void ventasDiaActual(void);
 
 #endif
