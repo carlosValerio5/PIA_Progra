@@ -228,6 +228,4 @@ void ventasDiaActual()
             printf("%-8s%-20s%-10s%-12s%-9s%-9s\n", datosExtras.folio, datosExtras.cliente,datosExtras.subtotal,datosExtras.descuento,datosExtras.iva, datosExtras.total );
         }
     }
-    
 }
-

@@ -55,3 +55,5 @@ void Reabastecimiento();
 void pedirFecha(Fecha *fecha);
 
 int compararFechas(Fecha fecha1, Fecha fecha2);
+
+#endif 
