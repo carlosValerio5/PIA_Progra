@@ -52,6 +52,7 @@ int main(){
         switch (op)
         {
             case 1:
+                procesoTicket();
             break;
             case 2:
                 op = menuReporte();

@@ -5,7 +5,7 @@
 #include <string.h>
 #include "./lib/VentasF.h"
 #include "./lib/clientes.h"
-#include "producto.h"
+#include "./lib/producto.h"
 
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -58,12 +58,11 @@ int consultaClav2(cliente *resultado){
 
     FILE *archClientes;
     int idbusqueda;
-    char fecha[11];
     int flag = 0;
 
-    archClientes = fopen("./bin/clientes.bin", "wb");
+    archClientes = fopen("./bin/clientes.bin", "rb");
     if (archClientes == NULL){
-        printf("\nError al abrir el archivo.");
+        printf("\nError al abrir el archivo. :C");
         return 0;
     }
 
@@ -74,8 +73,6 @@ int consultaClav2(cliente *resultado){
     {
         return 0;
     }
-
-    obtener_fecha(fecha, sizeof(fecha));
 
     while(fread(resultado, sizeof(cliente), 1, archClientes)!= 0){
         if (idbusqueda == resultado->ID){
@@ -93,43 +90,123 @@ int consultaClav2(cliente *resultado){
     return flag;
 }
 
+int consultaClavP(Producto *ProductoVf){
+
+    FILE *archProducto;
+    int idbusqueda;
+    int flag = 0;
+
+    archProducto = fopen("./bin/productos.bin", "rb");
+    if (archProducto == NULL){
+        printf("\nError al abrir el archivo.");
+        return 0;
+    }
+
+    printf("\nIngrese el ID del producto a comprar (Pulse 0 para regresar al submenu): ");
+    fflush(stdin);
+    scanf("%d", &idbusqueda);
+    if(idbusqueda == 0)
+    {
+        return 0;
+    }
+
+    while(fread(ProductoVf, sizeof(Producto), 1, archProducto)){
+        if (idbusqueda == ProductoVf->clave){
+            flag = 1;
+            break;
+        }
+    }
+    fclose(archProducto);
+    
+    if (flag == 0){
+        printf("\nNo se encontraron resultados.");
+        return consultaClavP(ProductoVf);
+        
+    }
+    return flag;
+}
 
 
-
-void procesoVenta(dataV *ventaF)
+void procesoVenta(dataV *ventaF, infoI *InfoEF)
 {
     int cantidad, op;
+    Producto ProductoV;
+    if(consultaClavP(&ProductoV) !=0)
+    {
+        ventaF->ID_Producto = ProductoV.clave;
+        ventaF->precio = ProductoV.precio;
+        printf("\nInformacion de producto: \nDescripcion: %s \nExistencia: %d \nPrecio: %.2f", ProductoV.descripcion, ProductoV.cantidad, ProductoV.precio );
+        do{
+            printf("\nIngrese la cantidad a comprar: ");
+            scanf("%d", &cantidad);
+        }while(cantidad < 1 || cantidad > ProductoV.cantidad);
+        ventaF->cantidadC = cantidad;
+        InfoEF->subtotal+= ProductoV.precio;
 
 
+        FILE *archivoVentas = fopen("bin/VentasG.bin", "ab");
+        fwrite(ventaF, sizeof(dataV), 1, archivoVentas);
 
-    printf("\nDesea algo mas (Si = 1 / No =0) ? ");
+
+        printf("\nDesea hacer otra compra (Si =1 / No =0 )");
+        scanf("%d",op);
+        if(op == 1)
+        {
+            procesoVenta(ventaF, InfoEF);
+        }else
+        {
+            return;
+        }
+    }else{
+        return;
+    }
 }
+
+
 
 
 void procesoTicket()
 {
     dataV venta;
     dataV ventaL;
+    infoI infoE;
     cliente clienteV;    
     if(consultaClav2(&clienteV) == 1)
     {
+        venta.ID_Cliente=clienteV.ID;
         struct stat st;
         const char *nombreArchivo = "bin/ventasG.bin";
         if(stat(nombreArchivo, &st)== 0)
         {
-                FILE*archivoVentas = fopen(nombreArchivo, "rd");
-                while(fread(&ventaL, sizeof(dataV),1, archivoVentas) !=1)
-                {}
-                venta.folio = ventaL.folio+1;
-                obtener_fecha(venta.fecha, sizeof(venta.fecha));
-                procesoVenta(&venta);
+            FILE*archivoVentas = fopen(nombreArchivo, "rb+");
+            while(fread(&ventaL, sizeof(dataV),1, archivoVentas) !=1)
+            {}
+            venta.folio = ventaL.folio+1;
         }
         else
         {
-            FILE *archivo = fopen(nombreArchivo,"rb");
+            FILE *archivo = fopen(nombreArchivo,"wb+");
             fclose(archivo);
             venta.folio=1;
         }
+
+
+        obtener_fecha(venta.fecha, 11);
+        strcpy(infoE.fecha,venta.fecha);
+        infoE.folio = venta.folio;
+        strcpy(infoE.cliente, clienteV.nombre);
+        infoE.subtotal =0.0;
+
+        procesoVenta(&venta, &infoE);
+
+        infoE.descuento = infoE.subtotal*clienteV.descuento;
+        infoE.iva = infoE.subtotal+infoE.subtotal*.16;
+        infoE.total = infoE.subtotal+infoE.iva-infoE.descuento;
+
+        FILE *archiInfoE = fopen("bin/InfoE.bin", "ab");
+        fread(&infoE, sizeof(infoI), 1, archiInfoE);
+        fclose(archiInfoE);
+
     }
 }
 
@@ -152,7 +229,5 @@ void ventasDiaActual()
         }
     }
     
-    
-
 }
 

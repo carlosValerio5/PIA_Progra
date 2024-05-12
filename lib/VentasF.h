@@ -1,5 +1,5 @@
-#ifndef _VENTASF_H_
-#define _VENTASF_H_
+#ifndef VENTASF_H
+#define VENTASF_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,6 +9,9 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include "clientes.h"
+#include "producto.h"
+
+
 
 
 typedef struct ventasData{
@@ -39,8 +42,12 @@ int menuReporte(void);
 
 int consultaClav2(cliente *);
 
-void procesoVenta(dataV *);
+int consultaClavP(Producto *);
 
-void procesoTicket();
+void procesoVenta(dataV *, infoI *);
+
+void procesoTicket(void);
+
+void ventasDiaActual(void);
 
 #endif
