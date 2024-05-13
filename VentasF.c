@@ -128,22 +128,29 @@ void procesoVenta(dataV *ventaF, infoI *InfoEF)
 {
     int cantidad, op;
     Producto ProductoV;
+        
+    
+    
     if(consultaClavP(&ProductoV) !=0)
     {
         ventaF->ID_Producto = ProductoV.clave;
         ventaF->precio = ProductoV.precio;
+        
+        
+        
+        
         printf("\nInformacion de producto: \nDescripcion: %s \nExistencia: %d \nPrecio: %.2f", ProductoV.descripcion, ProductoV.cantidad, ProductoV.precio );
         do{
             printf("\nIngrese la cantidad a comprar: ");
             scanf("%d", &cantidad);
         }while(cantidad < 1 || cantidad > ProductoV.cantidad);
         ventaF->cantidadC = cantidad;
-        InfoEF->subtotal+= ProductoV.precio;
+        InfoEF->subtotal+= ProductoV.precio*cantidad;
 
 
         FILE *archivoVentas = fopen("bin/VentasG.bin", "ab");
         fwrite(ventaF, sizeof(dataV), 1, archivoVentas);
-
+		fclose(archivoVentas);
 
         printf("\nDesea hacer otra compra (Si =1 / No =0 ): ");
         scanf("%d",&op);
@@ -170,7 +177,6 @@ void procesoTicket()
     cliente clienteV;    
     if(consultaClav2(&clienteV) == 1)
     {
-    	printf("\n\nHola?");
         venta.ID_Cliente=clienteV.ID;
         struct stat st;
         const char *nombreArchivo = "bin/ventasG.bin";
@@ -178,7 +184,7 @@ void procesoTicket()
         {
             FILE*archivoVentas = fopen(nombreArchivo, "rb+");
             while(fread(&ventaL, sizeof(dataV),1, archivoVentas) ==1)
-            {printf("\n\nHola?");}
+            {}
             fclose(archivoVentas);
             venta.folio = ventaL.folio+1;
         }
@@ -191,6 +197,7 @@ void procesoTicket()
 
         obtener_fecha(venta.fecha, 11);
         strcpy(infoE.fecha,venta.fecha);
+        printf("\n\n%s", infoE.fecha);
         infoE.folio = venta.folio;
         strcpy(infoE.cliente, clienteV.nombre);
         infoE.subtotal =0.0;
@@ -198,32 +205,50 @@ void procesoTicket()
         procesoVenta(&venta, &infoE);
 
         infoE.descuento = infoE.subtotal*clienteV.descuento;
-        infoE.iva = infoE.subtotal+infoE.subtotal*.16;
+        infoE.iva = infoE.subtotal+(infoE.subtotal*.16);
         infoE.total = infoE.subtotal+infoE.iva-infoE.descuento;
 
         FILE *archiInfoE = fopen("bin/InfoE.bin", "ab");
-        fread(&infoE, sizeof(infoI), 1, archiInfoE);
+        fwrite(&infoE, sizeof(infoI), 1, archiInfoE);
         fclose(archiInfoE);
-
+        
+        
+        Sleep(2);
+        system("cls");
+        printf("\n\n\t\tTicket de compra:");
     }
+
 }
 
 
-void ventasDiaActual()
-{
-    infoI datosExtras;
-    char fecha[11];
-    obtener_fecha(fecha, sizeof(fecha));
-    printf("\nReporte de ventas del dia actual:\n\n ");
-    printf("\n\t\t\t\tComercializadora Fuentes");
-    printf("\n\t\t\t   Reporte de Ventas al dia %s\n", fecha);
-    printf("%-8s%-20s%-10s%-12s%-9s%-9s\n", "Folio", "Cliente", "Subtotal", "Descuento", "IVA", "Total");
-    FILE *archDaEx= fopen("bin/datosExtras.bin", "rb");
-    while (fread(&datosExtras, sizeof(infoI),1, archDaEx)!=0)
-    {
-        if(strcmp(datosExtras.fecha, fecha) == 0)
-        {
-            printf("%-8s%-20s%-10s%-12s%-9s%-9s\n", datosExtras.folio, datosExtras.cliente,datosExtras.subtotal,datosExtras.descuento,datosExtras.iva, datosExtras.total );
+void mostrarDatosDeHoy() {
+    // Obtener la fecha actual en formato de cadena (dd/mm/aaaa)
+    char fecha_actual[11];
+    obtener_fecha(fecha_actual, 11);
+
+    // Abrir el archivo "InfoE.dat" en modo lectura
+    FILE *archivo = fopen("bin/InfoE.bin", "rb");
+    if (archivo == NULL) {
+        printf("No se pudo abrir el archivo.\n");
+        return;
+    }
+
+    // Leer los datos del archivo y mostrar los que coincidan con la fecha actual
+    infoI info;
+    int encontrados = 0;
+    printf("\n\t\t\t\tComercializadora Fuentes\n\t\t\tReporte de Ventas al día %s\nFolio   Cliente   Subtotal   Descuento IVA   Total\n\n", fecha_actual);
+    while (fread(&info, sizeof(infoI), 1, archivo) ==1) {
+        if (strcmp(info.fecha, fecha_actual) == 0) {
+            printf("%-8d%-10s%-12.2f%-10.2f%-8.2f%-8.2f\n", info.folio, info.cliente, info.subtotal, info.descuento, info.iva, info.total);
+            encontrados = 1;
         }
     }
+
+    if (encontrados==0) {
+        printf("\nNo se encontraron datos para la fecha de hoy.\n");
+    }
+
+    fclose(archivo);
 }
+
+

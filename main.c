@@ -49,27 +49,30 @@ int main(){
      if (!loginUsuario()){
     // Apartado de ventas (Esto va dentro de un switch op 3)______________________________________________________________
         int op;
-        op = menuF(); // Tomara la opcion que eligio el usuario del Primer menu de ventas
-        switch (op)
-        {
-            case 1:
-            	//nuevoCliente();
-        		//nuevo_producto();
-                procesoTicket();
-            break;
-            case 2:
-                op = menuReporte();
-                if(op == 1)
-                {
-                }
-                else
-                {
-                }
-            break;
-            case 3:
-            break;
-            //____________________________________________________________________________________________________________
-        }
+        do{
+	        op = menuF(); // Tomara la opcion que eligio el usuario del Primer menu de ventas
+	        switch (op)
+	        {
+	            case 1:
+	            	//nuevoCliente();
+	        		//nuevo_producto();
+	                procesoTicket();
+	            break;
+	            case 2:
+	                op = menuReporte();
+	                if(op == 1)
+	                {
+	                	mostrarDatosDeHoy();
+	                }
+	                else
+	                {
+	                }
+	            break;
+	            case 3:
+	            break;
+	            //____________________________________________________________________________________________________________
+	        }
+    	}while(op!=100);
         
     } 
 
