@@ -124,11 +124,12 @@ void editar_producto() {
         return;
     }
 
+	int i;
     while (producto_encontrado == -1) { //bucle para intentar hasta que se encuentre el producto o el usuario quiera salir
         printf("Ingrese clave del producto a editar: ");
         scanf("%d", &clave);
 
-        for (int i = 0; i < total; i++) {
+        for ( i = 0; i < total; i++) {
             Producto *producto = &productos[i];
             if (producto->clave == clave) {
                 producto_encontrado = i;
@@ -208,7 +209,8 @@ void consulta_tipo() {
 
     system("cls");
     printf("Productos del tipo %d:\n", tipo);
-    for (int i = 0; i < total; i++) {
+    int i;
+    for (i = 0; i < total; i++) {
         Producto *producto = &productos[i]; // Usando ->
         if (producto->tipo_producto == tipo && producto->estatus == 1) {
             printf("Clave: %d, Nombre: %s, Descripcion: %s, Cantidad: %d, Precio: %.2f\n", producto->clave, producto->nombre, producto->descripcion, producto->cantidad, producto->precio);
@@ -232,10 +234,10 @@ void consulta_clave() {
 
     printf("Ingrese clave del producto: ");
     scanf("%d", &clave);
-
+	int i=0;
     system("cls");
     int producto_encontrado = -1;
-    for (int i = 0; i < total; i++) {
+    for ( i = 0; i < total; i++) {
         Producto *producto = &productos[i];
         if (producto->clave == clave && producto->estatus == 1) {
             producto_encontrado = i;
@@ -256,6 +258,7 @@ void consulta_clave() {
 }
 
 void mostrar_menu() {
+	fflush(stdin);
     system("cls");
     printf("Menu Producto\n");
     printf("1. Nuevo Producto\n");

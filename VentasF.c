@@ -61,19 +61,17 @@ int consultaClav2(cliente *resultado){
 
     archClientes = fopen("./bin/clientes.bin", "rb");
     if (archClientes == NULL){
-        printf("\nError al abrir el archivo. :C");
+        printf("\nError al abrir el archivo.");
         system("pause");
         return 0;
     }
-
+	fflush(stdin);
     printf("\nIngrese el ID del cliente a buscar (Pulse 0 para regresar al submenu): ");
-    fflush(stdin);
     scanf("%d", &idbusqueda);
     if(idbusqueda == 0)
     {
         return 0;
     }
-
     while(fread(resultado, sizeof(cliente), 1, archClientes)!= 0){
         if (idbusqueda == resultado->ID){
             flag = 1;
@@ -81,7 +79,6 @@ int consultaClav2(cliente *resultado){
         }
     }
     fclose(archClientes);
-    
     if (flag == 0){
         printf("\nNo se encontraron resultados.");
         return consultaClav2(resultado);
@@ -148,8 +145,8 @@ void procesoVenta(dataV *ventaF, infoI *InfoEF)
         fwrite(ventaF, sizeof(dataV), 1, archivoVentas);
 
 
-        printf("\nDesea hacer otra compra (Si =1 / No =0 )");
-        scanf("%d",op);
+        printf("\nDesea hacer otra compra (Si =1 / No =0 ): ");
+        scanf("%d",&op);
         if(op == 1)
         {
             procesoVenta(ventaF, InfoEF);
@@ -173,14 +170,16 @@ void procesoTicket()
     cliente clienteV;    
     if(consultaClav2(&clienteV) == 1)
     {
+    	printf("\n\nHola?");
         venta.ID_Cliente=clienteV.ID;
         struct stat st;
         const char *nombreArchivo = "bin/ventasG.bin";
         if(stat(nombreArchivo, &st)== 0)
         {
             FILE*archivoVentas = fopen(nombreArchivo, "rb+");
-            while(fread(&ventaL, sizeof(dataV),1, archivoVentas) !=1)
-            {}
+            while(fread(&ventaL, sizeof(dataV),1, archivoVentas) ==1)
+            {printf("\n\nHola?");}
+            fclose(archivoVentas);
             venta.folio = ventaL.folio+1;
         }
         else
@@ -189,7 +188,6 @@ void procesoTicket()
             fclose(archivo);
             venta.folio=1;
         }
-
 
         obtener_fecha(venta.fecha, 11);
         strcpy(infoE.fecha,venta.fecha);

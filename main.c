@@ -53,6 +53,8 @@ int main(){
         switch (op)
         {
             case 1:
+            	//nuevoCliente();
+        		//nuevo_producto();
                 procesoTicket();
             break;
             case 2:
