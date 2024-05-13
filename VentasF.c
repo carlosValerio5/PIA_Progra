@@ -270,41 +270,53 @@ void mostrarVentasPorCliente() {
     int idCliente;
     
     
-    printf("Ingrese el ID del cliente para ver sus ventas (0 para regresar): ");
-    scanf("%d", &idCliente);
-    if (idCliente == 0) {
-        return; 
-    }
+
     FILE *archInfoE = fopen("bin/InfoE.bin", "rb");
     FILE *archVentas = fopen("bin/ventasG.bin", "rb");
     FILE *archProd = fopen("bin/productos.bin", "rb");
     if(consultaClav2(&clienteV) == 1)
     {
+    	printf("                                         Comercializadora Fuentes\n");
+		printf("                                      Reporte de Ventas por Cliente\n");
+		printf("Clave:  %ld\n", clienteV.ID);
+		printf("Nombre :  %s %s %s\n", clienteV.nombre, clienteV.apellidoP, clienteV.apellidoM);
+		printf("Dirección:  %d %s %s %d\n", clienteV.dir.cp, clienteV.dir.colonia, clienteV.dir.calle, clienteV.dir.numero);
+		printf("Teléfono : %ld\t\t\t\t\t\t\tCorreo Electrónico: %s\n\n", clienteV.telefono, clienteV.correo);
     	while(fread(&infoExtra, sizeof(infoI), 1, archInfoE) == 1)
     	{
     		if(strcmp(clienteV.nombre, infoExtra.cliente) == 0)
     		{
+				//printf("\n\n\n\nCantidad de ventas que hace");
     			while(fread(&infoV, sizeof(dataV), 1, archVentas) == 1)
     			{
+    				
     				if(infoV.folio == infoExtra.folio)
     				{
-    					while(&infoProd, sizeof(Producto), 1,archProd )
+    					//printf("\n\n\n\nCantidad de productos en el folio");
+    					while(fread(&infoProd, sizeof(Producto), 1,archProd)==1 )
     					{
     						if(infoV.ID_Producto == infoProd.clave)
     						{
-    							printf("                                         Comercializadora Fuentes\n");
-							    printf("                                      Reporte de Ventas por Cliente\n");
-							    printf("Clave:  %ld\n", clienteV.ID);
-							    printf("Nombre :  %s %s %s\n", clienteV.nombre, clienteV.apellidoP, clienteV.apellidoM);
-							    printf("Dirección:  %d %s %s %d\n", clienteV.dir.cp, clienteV.dir.colonia, clienteV.dir.calle, clienteV.dir.numero);
-							    printf("Teléfono : %ld\t\t\t\t\t\t\tCorreo Electrónico: %s\n\n", clienteV.telefono, clienteV.correo);
+    							//printf("\n\n\n\nCantidad de productos con la clave");
+							    int longitud = strlen(infoProd.descripcion);
+							    if (infoProd.descripcion[longitud - 1] == '\n') {
+							        infoProd.descripcion[longitud - 1] = '\0'; // Reemplaza el carácter de salto de línea con el terminador de cadena
+							    }
+							    printf("%-8s%-15s%-50s%-10s%-8s%-8s\n", "Folio", "Fecha", "Descripcion", "Cantidad", "Precio", "Total");
+								printf("%-8d%-15s%-50s%-10d%-8.2f%-8.2f\n", infoExtra.folio, infoExtra.fecha, infoProd.descripcion, infoV.cantidadC, infoProd.precio, infoExtra.total);
+								printf("%110s: %.2f\n%110s: %.2f\n%110s: %.2f\n%110s: %.2f\n\n\n", "Subtotal", infoExtra.subtotal, "Descuento", infoExtra.descuento, "IVA", infoExtra.iva, "Total", infoExtra.total);
 							}
 						}
+						rewind(archProd);
 					}
 				}
+				rewind(archVentas);
 			}
 		}
 	}
+	fclose(archInfoE);
+	fclose(archVentas);	
+	fclose(archProd);
 }
     	
     

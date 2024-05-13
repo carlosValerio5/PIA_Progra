@@ -66,6 +66,7 @@ int main(){
 	                }
 	                else
 	                {
+	                	mostrarVentasPorCliente();
 	                }
 	            break;
 	            case 3:
