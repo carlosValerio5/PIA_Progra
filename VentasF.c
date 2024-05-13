@@ -197,23 +197,24 @@ void procesoTicket()
 
         obtener_fecha(venta.fecha, 11);
         strcpy(infoE.fecha,venta.fecha);
-        printf("\n\n%s", infoE.fecha);
         infoE.folio = venta.folio;
         strcpy(infoE.cliente, clienteV.nombre);
         infoE.subtotal =0.0;
 
         procesoVenta(&venta, &infoE);
-
+        if(infoE.subtotal ==0)
+        {
+        	return;
+		}
+		printf("\n\n\n%f, %f",clienteV.descuento, infoE.descuento );
         infoE.descuento = infoE.subtotal*clienteV.descuento;
-        infoE.iva = infoE.subtotal+(infoE.subtotal*.16);
+        infoE.iva = infoE.subtotal*.16;
         infoE.total = infoE.subtotal+infoE.iva-infoE.descuento;
 
         FILE *archiInfoE = fopen("bin/InfoE.bin", "ab");
         fwrite(&infoE, sizeof(infoI), 1, archiInfoE);
         fclose(archiInfoE);
-        
-        
-        Sleep(2);
+
         system("cls");
         printf("\n\n\t\tTicket de compra:");
     }
@@ -232,23 +233,81 @@ void mostrarDatosDeHoy() {
         printf("No se pudo abrir el archivo.\n");
         return;
     }
+    float total_subtotal = 0.0;
+    float total_descuento = 0.0;
+    float total_iva = 0.0;
+    float total_total = 0.0;
 
     // Leer los datos del archivo y mostrar los que coincidan con la fecha actual
     infoI info;
     int encontrados = 0;
-    printf("\n\t\t\t\tComercializadora Fuentes\n\t\t\tReporte de Ventas al día %s\nFolio   Cliente   Subtotal   Descuento IVA   Total\n\n", fecha_actual);
+    printf("\n\t\t\t\tComercializadora Fuentes\n\t\t\tReporte de Ventas al día %s\nFolio   Cliente   Subtotal   Descuento   IVA     Total\n\n", fecha_actual);
     while (fread(&info, sizeof(infoI), 1, archivo) ==1) {
         if (strcmp(info.fecha, fecha_actual) == 0) {
             printf("%-8d%-10s%-12.2f%-10.2f%-8.2f%-8.2f\n", info.folio, info.cliente, info.subtotal, info.descuento, info.iva, info.total);
             encontrados = 1;
+            total_subtotal += info.subtotal;
+            total_descuento += info.descuento;
+            total_iva += info.iva;
+            total_total += info.total;
         }
     }
 
     if (encontrados==0) {
         printf("\nNo se encontraron datos para la fecha de hoy.\n");
-    }
+    }else{
+    	printf("%-8s%-10s%-12.2f%-10.2f%-8.2f%-8.2f\n", "", "", total_subtotal, total_descuento, total_iva, total_total);
+	}
 
     fclose(archivo);
 }
+
+void mostrarVentasPorCliente() {
+    cliente clienteV;
+    infoI infoExtra;
+    dataV infoV;
+    Producto infoProd;
+    int idCliente;
+    
+    
+    printf("Ingrese el ID del cliente para ver sus ventas (0 para regresar): ");
+    scanf("%d", &idCliente);
+    if (idCliente == 0) {
+        return; 
+    }
+    FILE *archInfoE = fopen("bin/InfoE.bin", "rb");
+    FILE *archVentas = fopen("bin/ventasG.bin", "rb");
+    FILE *archProd = fopen("bin/productos.bin", "rb");
+    if(consultaClav2(&clienteV) == 1)
+    {
+    	while(fread(&infoExtra, sizeof(infoI), 1, archInfoE) == 1)
+    	{
+    		if(strcmp(clienteV.nombre, infoExtra.cliente) == 0)
+    		{
+    			while(fread(&infoV, sizeof(dataV), 1, archVentas) == 1)
+    			{
+    				if(infoV.folio == infoExtra.folio)
+    				{
+    					while(&infoProd, sizeof(Producto), 1,archProd )
+    					{
+    						if(infoV.ID_Producto == infoProd.clave)
+    						{
+    							printf("                                         Comercializadora Fuentes\n");
+							    printf("                                      Reporte de Ventas por Cliente\n");
+							    printf("Clave:  %ld\n", clienteV.ID);
+							    printf("Nombre :  %s %s %s\n", clienteV.nombre, clienteV.apellidoP, clienteV.apellidoM);
+							    printf("Dirección:  %d %s %s %d\n", clienteV.dir.cp, clienteV.dir.colonia, clienteV.dir.calle, clienteV.dir.numero);
+							    printf("Teléfono : %ld\t\t\t\t\t\t\tCorreo Electrónico: %s\n\n", clienteV.telefono, clienteV.correo);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+    	
+    
+
 
 
