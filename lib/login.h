@@ -3,7 +3,7 @@
 #include "Usuarios.h"
 int loginUsuario(void);
 
-int confirmarUsuario(dataU *, int *);
+int confirmarUsuario(dataU *, int *, char *);
 
 
 

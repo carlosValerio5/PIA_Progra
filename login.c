@@ -2,10 +2,10 @@
 #include <string.h>
 #include <windows.h>
 #include "./lib/login.h"
-#include <windows.h>
 #include "./lib/Usuarios.h"
 
 int loginUsuario(void){
+    char nombrepasado[30];
     int intento = 0;
     dataU comparar;
     FILE *archUsuario;
@@ -25,7 +25,7 @@ int loginUsuario(void){
         fgets(comparar.contra, 30, stdin);
         //Quitar caracter de nueva linea
         comparar.contra[strcspn(comparar.contra, "\n")] = '\0';
-        if (confirmarUsuario(&comparar, &intento)==0)
+        if (confirmarUsuario(&comparar, &intento, (char *)&nombrepasado)==0)
             //Si todo coincide con exito se regresa 0
             return 0;
     }
@@ -34,7 +34,7 @@ int loginUsuario(void){
     return 1;
 }
 
-int confirmarUsuario(dataU *comparar, int *intento){
+int confirmarUsuario(dataU *comparar, int *intento, char *pasado){
     FILE *archUsuario;
     dataU temp;
     if ((archUsuario = fopen("./usuarios/usuariosData.bin", "rb+"))==NULL){
@@ -59,9 +59,14 @@ int confirmarUsuario(dataU *comparar, int *intento){
                     return -1;
                 }
                 //Si el usuario es un usuario normal si se suman intentos
-                else if(temp.tipoUsuario == 0)
-                    (*intento)++;
+                else if(temp.tipoUsuario == 0){
+                    if(strcmp(pasado, temp.nombreUsuario) == 0)
+                        (*intento)++;
+                    else
+                        (*intento) = 1;
+                }
                 //Si ya se hicieron 3 o mas intentos, se bloquea el usuario
+                strcpy(pasado, temp.nombreUsuario);
                 if ((*intento)>=3){
                     printf("\nUsuario Bloqueado, contactar a su administrador para desbloquear.");
                     temp.status = 0;
