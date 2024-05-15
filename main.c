@@ -60,7 +60,8 @@ int main(){
     }
 //___________________________________________________________________________________________________________________________________
 //Menu Principal
-    if (!loginUsuario()){
+    dataU comparar;
+    if (!loginUsuario(&comparar)){
         int opcionPrincipal = 0;
 	    while(opcionPrincipal!= 6){
 			system("cls");
@@ -130,6 +131,12 @@ int main(){
 	    	}
 	    	else if (opcionPrincipal == 2){
 	    		//Producto
+				if(comparar.tipoUsuario == 0){
+					printf("\nOpcion solo para administradores.");
+					printf("\n");
+					system("pause");
+					continue;
+				}
 	    	}
 	    	else if (opcionPrincipal == 3){
     
@@ -163,9 +170,21 @@ int main(){
 	    	}
 			else if (opcionPrincipal == 4){
 				//Inventario
+				if(comparar.tipoUsuario == 0){
+					printf("\nOpcion solo para administradores.");
+					printf("\n");
+					system("pause");
+					continue;
+				}
 			}
 			else if(opcionPrincipal == 5){
 				//Usuarios
+				if(comparar.tipoUsuario == 0){
+					printf("\nOpcion solo para administradores.");
+					printf("\n");
+					system("pause");
+					continue;
+				}
 			}
 	    }
     } 

@@ -4,10 +4,9 @@
 #include "./lib/login.h"
 #include "./lib/Usuarios.h"
 
-int loginUsuario(void){
+int loginUsuario(dataU *comparar){
     char nombrepasado[30];
     int intento = 0;
-    dataU comparar;
     FILE *archUsuario;
     if ((archUsuario = fopen("./usuarios/usuariosData.bin", "rb+"))==NULL){
         printf("\nError al abrir el archivo.");
@@ -19,15 +18,15 @@ int loginUsuario(void){
         printf("\n\t\t\tComercializadora Fuentes");
         printf("\nUsuario: ");
         fflush(stdin);
-        fgets(comparar.nombreUsuario, 30, stdin);
+        fgets(comparar->nombreUsuario, 30, stdin);
         //Quitar caracter de nueva linea
-        comparar.nombreUsuario[strcspn(comparar.nombreUsuario, "\n")] = '\0';
+        comparar->nombreUsuario[strcspn(comparar->nombreUsuario, "\n")] = '\0';
         printf("Contrasena: ");
-        fgets(comparar.contra, 30, stdin);
+        fgets(comparar->contra, 30, stdin);
         //Quitar caracter de nueva linea
-        comparar.contra[strcspn(comparar.contra, "\n")] = '\0';
+        comparar->contra[strcspn(comparar->contra, "\n")] = '\0';
         printf("\n-----------------------------------------------------------------------");
-        if (confirmarUsuario(&comparar, &intento, (char *)&nombrepasado)==0)
+        if (confirmarUsuario(comparar, &intento, (char *)&nombrepasado)==0)
             //Si todo coincide con exito se regresa 0
             return 0;
     }
@@ -51,6 +50,7 @@ int confirmarUsuario(dataU *comparar, int *intento, char *pasado){
             if((strcmp(temp.contra, comparar->contra))==0){
                 //retorna 0 si todo sale bien y coinciden usuario y contrasena
                 fclose(archUsuario);
+                (*comparar) = temp;
                 return 0;
             }
             else{
