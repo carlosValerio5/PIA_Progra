@@ -1,13 +1,26 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "clientes.c"
 #include "VentasF.c"
 #include "Usuarios.c"
 #include "login.c"
 #include "producto.c"
 
+void menuPrincipal(){
+	printf("\nComercializadora Fuentes");
+	printf("\n1. Clientes");
+	printf("\n2. Productos");
+	printf("\n3. Ventas");
+	printf("\n4. Inventario");
+	printf("\n5. Usuarios");
+	printf("\n6. Salir");
+	printf("\nSeleccione una opcion: ");
+    return;
+}
+
 int main(){
-    //Apartado para crear la carpera de usuarios y el archivo con los datos respectivos del usuario1____________________________________________________________________
+    //Apartado para crear la carpera de usuarios y el archivo con los datos respectivos del usuario1
     //Comprobacion y creacion de la carpeta "usuarios"
 	const char *carpeta = "usuarios";
 	struct stat st;
@@ -46,50 +59,116 @@ int main(){
 		fclose(archivo);
     }
 //___________________________________________________________________________________________________________________________________
+//Menu Principal
     if (!loginUsuario()){
-    // Apartado de ventas (Esto va dentro de un switch op 3)______________________________________________________________
-        int op;
-        do{
-	        op = menuF(); // Tomara la opcion que eligio el usuario del Primer menu de ventas
-	        switch (op)
-	        {
-	            case 1:
-	            	//nuevoCliente();
-	        		//nuevo_producto();
-	                procesoTicket();
-	            break;
-	            case 2:
-	                op = menuReporte();
-	                if(op == 1)
+        int opcionPrincipal = 0;
+	    while(opcionPrincipal!= 6){
+			system("cls");
+	        menuPrincipal();
+            scanf("%d", &opcionPrincipal);
+	    	while(opcionPrincipal<0||opcionPrincipal>6){
+	    		printf("\nOpcion Invalida, ingrese un numero entre 1 y 6");
+	    		Sleep(2000);
+	    		system("cls");
+	    		menuPrincipal();
+	    		scanf("%d", &opcionPrincipal);
+	    	}
+			system("cls");
+	    	if(opcionPrincipal == 1){
+	    		//Clientes
+				int opcClientes = 0, opcsubClientes = 0;
+				while (opcClientes != 4){
+					menuClientes();
+					printf("\nIngrese una opcion: ");
+					scanf("%d", &opcClientes);
+					while(opcClientes>4 || opcClientes <0){
+						printf("\nOpcion Invalida, ingrese un numero entre 1 y 4");
+						Sleep(2000);
+						system("cls");
+						menuClientes();
+						printf("\nIngrese una opcion: ");
+						scanf("%d", &opcClientes);
+					}
+					if (opcClientes==1){
+						if (nuevoCliente()!= 0){
+							printf("Error al crear nuevo cliente");
+						}
+					}
+					else if (opcClientes== 2){
+						if (eliminarCliente()!= 0){
+							printf("Error al eliminar cliente");
+						}
+					}
+					else if (opcClientes == 3){
+						submenuClientes();
+						printf("\nIngrese una opcion: ");
+						scanf("%d", &opcsubClientes);
+						while (opcsubClientes <0 || opcsubClientes >2)
+						{
+							printf("\nOpcion Invalida, ingrese un numero entre 1 y 2");
+						    Sleep(2000);
+						    system("cls");
+						    submenuClientes();
+							printf("\nIngrese una opcion: ");
+						    scanf("%d", &opcsubClientes);
+						}
+						if (opcsubClientes == 1){
+							consultaNom();
+							printf("\nPresione enter para continuar...");
+							fflush(stdin);
+							getchar();
+						}
+						else if(opcsubClientes == 2){
+							cliente vacio;
+							consultaClav(&vacio);
+							printf("\nPresione enter para continuar...");
+							fflush(stdin);
+							getchar();
+						}
+					}
+				}
+	    	}
+	    	else if (opcionPrincipal == 2){
+	    		//Producto
+	    	}
+	    	else if (opcionPrincipal == 3){
+    
+                // Apartado de ventas (Esto va dentro de un switch op 3)______________________________________________________________
+                int op;
+                do{
+	                op = menuF(); // Tomara la opcion que eligio el usuario del Primer menu de ventas
+	                switch (op)
 	                {
-	                	mostrarDatosDeHoy();
+	                    case 1:
+	                    	//nuevoCliente();
+	                		//nuevo_producto();
+	                        procesoTicket();
+	                    break;
+	                    case 2:
+	                        op = menuReporte();
+	                        if(op == 1)
+	                        {
+	                        	mostrarDatosDeHoy();
+	                        }
+	                        else
+	                        {
+	                        	mostrarVentasPorCliente();
+	                        }
+	                    break;
+	                    case 3:
+	                    break;
+	                    //____________________________________________________________________________________________________________
 	                }
-	                else
-	                {
-	                	mostrarVentasPorCliente();
-	                }
-	            break;
-	            case 3:
-	            break;
-	            //____________________________________________________________________________________________________________
-	        }
-    	}while(op!=100);
-        
+        	    }while(op!=100);
+	    	}
+			else if (opcionPrincipal == 4){
+				//Inventario
+			}
+			else if(opcionPrincipal == 5){
+				//Usuarios
+			}
+	    }
     } 
 
-
-    /*int op1, op2;
-    op1 = menuF();
-    switch (op1)
-    {
-    case 1:
-        nuevoCliente();
-        nuevo_producto();
-        procesoTicket();
-        break;
-    
-    default:
-        break;
-    }*/
     return 0;
 }

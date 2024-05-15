@@ -15,16 +15,18 @@ int loginUsuario(void){
     }
     while (intento<3)
     {
-        printf("\nComercializadora Fuentes");
+        printf("\n-----------------------------------------------------------------------");
+        printf("\n\t\t\tComercializadora Fuentes");
         printf("\nUsuario: ");
         fflush(stdin);
         fgets(comparar.nombreUsuario, 30, stdin);
         //Quitar caracter de nueva linea
         comparar.nombreUsuario[strcspn(comparar.nombreUsuario, "\n")] = '\0';
-        printf("\nContrasena: ");
+        printf("Contrasena: ");
         fgets(comparar.contra, 30, stdin);
         //Quitar caracter de nueva linea
         comparar.contra[strcspn(comparar.contra, "\n")] = '\0';
+        printf("\n-----------------------------------------------------------------------");
         if (confirmarUsuario(&comparar, &intento, (char *)&nombrepasado)==0)
             //Si todo coincide con exito se regresa 0
             return 0;

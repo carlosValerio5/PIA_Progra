@@ -29,10 +29,14 @@ int generarID(cliente*, FILE*);
 
 int limpiarArchivo(void);
 
-int clienteEliminar(void);
+int eliminarCliente(void);
 
 int consultaNom(void);
 
 void consultaClav(cliente *);
+
+void menuClientes(void);
+
+void submenuClientes(void);
 
 #endif

@@ -263,6 +263,7 @@ int eliminarCliente(void){
         }
     }
     fclose(archClientes);
+    return 0;
 }
 
 //Consultas:
@@ -305,7 +306,7 @@ int consultaNom(void){
         strcat(nomjunto, coincidencia.apellidoM);
 
         if((strcmp(coincidencia.nombre, nom))==0){
-            printf("\n\t\t\tComercializadora\n\n\t\t\tConsulta Por Cliente");
+            printf("\n\t\t\tComercializadora Fuentes\n\n\t\t\tConsulta Por Cliente");
             printf("\n%s", fecha);
             printf("\n\n\t\t\tPor Nombre");
             printf("\nNombre\t\t\tClave\tDireccion\t\tTelefono\tCorreo Electronico\tEstatus");
@@ -318,7 +319,8 @@ int consultaNom(void){
             flag = 1;
         }
         else if ((strcmp(coincidencia.apellidoP, nom))==0){
-            printf("\n\t\t\tComercializadora\n\n\t\t\tConsulta Por Cliente");
+            printf("\n-----------------------------------------------------------------------");
+            printf("\n\t\t\tComercializadora Fuentes\n\n\t\t\tConsulta Por Cliente");
             printf("\n%s", fecha);
             printf("\n\n\t\t\tPor Nombre");
             printf("\nNombre\t\t\tClave\tDireccion\t\tTelefono\tCorreo Electronico\tEstatus");
@@ -331,7 +333,8 @@ int consultaNom(void){
             flag = 1;
         }
         else if ((strcmp(coincidencia.apellidoP, nom))==0){
-            printf("\n\t\t\tComercializadora\n\n\t\t\tConsulta Por Cliente");
+            printf("\n-----------------------------------------------------------------------");
+            printf("\n\t\t\tComercializadora Fuentes\n\n\t\t\tConsulta Por Cliente");
             printf("\n%s", fecha);
             printf("\n\n\t\t\tPor Nombre");
             printf("\nNombre\t\t\tClave\tDireccion\t\tTelefono\tCorreo Electronico\tEstatus");
@@ -344,7 +347,8 @@ int consultaNom(void){
             flag = 1;
         }
         else if ((strcmp(nomjunto, nom))==0){
-            printf("\n\t\t\tComercializadora\n\n\t\t\tConsulta Por Cliente");
+            printf("\n-----------------------------------------------------------------------");
+            printf("\n\t\t\tComercializadora Fuentes\n\n\t\t\tConsulta Por Cliente");
             printf("\n%s", fecha);
             printf("\n\n\t\t\tPor Nombre");
             printf("\nNombre\t\t\tClave\tDireccion\t\tTelefono\tCorreo Electronico\tEstatus");
@@ -387,7 +391,8 @@ void consultaClav(cliente *resultado){
 
     while(fread(resultado, sizeof(cliente), 1, archClientes)!= 0){
         if (idbusqueda == resultado->ID){
-            printf("\n\t\t\tComercializadora\n\n\t\t\tConsulta Por Cliente");
+            printf("\n-----------------------------------------------------------------------");
+            printf("\n\t\t\tComercializadora Fuentes\n\n\t\t\tConsulta Por Cliente");
             printf("\n%s", fecha);
             printf("\n\n\t\t\tPor Clave");
             printf("\nNombre\t\t\tClave\tDireccion\t\tTelefono\tCorreo Electronico\tEstatus");
@@ -405,5 +410,22 @@ void consultaClav(cliente *resultado){
         printf("\nNo se encontraron resultados.");
     }
     fclose(archClientes);
+    return;
+}
+
+void menuClientes(){
+    system("cls");
+    printf("\n-----------------------------------------------------------------------");
+    printf("\n\t\t\t\tClientes");
+    printf("\n1. Nuevo Cliente");
+    printf("\n2. Eliminar Cliente");
+    printf("\n3. Consulta de Cliente");
+    printf("\n4. Regresar Menu Principal");
+    return;
+}
+
+void submenuClientes(){
+    printf("\n\t1. Por Nombre");
+    printf("\n\t2. Por Clave");
     return;
 }
