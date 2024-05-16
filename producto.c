@@ -2,11 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h> // Para sleep
-#include "./lib/producto.h"
+#include <time.h>
+#include "producto.h"
 
 //funcion para guardar productos
 void guardar_producto(Producto *producto) {
-    FILE *file = fopen("./bin/productos.bin", "ab");//modo para aÃ±adir
+    FILE *file = fopen("./bin/productos.bin", "ab");//modo para añadir
     if (file != NULL) {
         fwrite(producto, sizeof(Producto), 1, file);//guarda un producto2
         fclose(file);
@@ -25,46 +26,57 @@ int leer_productos(Producto *productos, int max_productos) {
     }
     return 0;
 }
-//funcion para actualizar productos
-void actualizar_producto(Producto *productos, int total) {
-    FILE *file = fopen("./bin/productos.bin", "wb"); //modo para sobreescribir
-    if (file != NULL) {
-        fwrite(productos, sizeof(Producto), total, file);
-        fclose(file);
-    } else {
-        printf("Error al abrir el archivo para actualizar.\n");
-    }
-}
+
 
 //funcion para verificar que la clave sea unica
 int verificar_clave(int clave) {
-    Producto productos[100];
-    int total = leer_productos(productos, 100); //lee productos del archiv
-    int i;
-    for (i = 0; i < total; i++) {
-        if (productos[i].clave == clave) {
+    FILE *archivo_productos = fopen("./bin/productos.bin", "rb");
+    if (archivo_productos == NULL) {
+        return -1;
+    }
+    Producto producto;
+    while (fread(&producto, sizeof(Producto), 1, archivo_productos) != 0) {
+        if (producto.clave == clave) {
+            fclose(archivo_productos);
             return 0;
         }
     }
+    fclose(archivo_productos);
     return 1;
 }
+
+//para obtener fecha
+void obtener_fecha(char *fecha_strF, size_t max_len) {
+    // Obtenemos la fecha actual
+    time_t t = time(NULL);
+    struct tm *fecha_actual = localtime(&t);
+
+    // Formatea la fecha en la cadena
+    strftime(fecha_strF, max_len, "%d/%m/%y", fecha_actual);
+}
+
 //funcion para nuevo producto: debe incluir clave unica, descripcion, tipo de producto, cantidad en existencia, nivel de stock(cantidad minima que debe tener en almacen), precio y estatus
+
 void nuevo_producto(){
     Producto producto;
     int tipo, cantidad, stock;
     float precio;
+    char fecha_str[11];
 
-    while(1){
+
+     while (1) {
         printf("Ingrese clave del producto (unica): ");
         scanf("%d", &producto.clave);
         fflush(stdin);
 
-        if(verificar_clave(producto.clave)){
+        if (verificar_clave(producto.clave)) {
             break;
         } else {
-            printf("Clave en uso. Intente de nuevo");
+            printf("Clave en uso. Intente de nuevo\n");
         }
     }
+
+    while (getchar() != '\n');
 
     //NOMBRE
     printf("Ingrese nombre del producto: ");
@@ -105,56 +117,45 @@ void nuevo_producto(){
     producto.estatus = 1;
 
     guardar_producto(&producto);
-    printf("Producto agregado con exito\n");
+    obtener_fecha(fecha_str, sizeof(fecha_str));
+    printf("Producto agregado con exito el %s\n", fecha_str);
     sleep(2);
-
-    mostrar_menu();
+    return;
 }
+
 //funcion para editar producto: capturar clave unica de productgo,
 void editar_producto() {
-    Producto productos[100]; // MÃ¡ximo 100 productos
-    int total = leer_productos(productos, 100);
     int clave, producto_encontrado = -1;
     int opcion;
     float precio, nuevo_precio;
+    char nombre_nuevo[50];
+    char fecha_str[11];
 
-    if (total == 0) {
-        printf("No hay productos en el archivo\n");
-        sleep(2);
+    FILE *archivo_productos = fopen("./bin/productos.bin", "r+b");
+    if (archivo_productos == NULL) {
+        printf("Error al abrir el archivo de productos\n");
         return;
     }
 
-	int i;
-    while (producto_encontrado == -1) { //bucle para intentar hasta que se encuentre el producto o el usuario quiera salir
-        printf("Ingrese clave del producto a editar: ");
-        scanf("%d", &clave);
+    printf("Ingrese clave del producto a editar: ");
+    scanf("%d", &clave);
 
-        for ( i = 0; i < total; i++) {
-            Producto *producto = &productos[i];
-            if (producto->clave == clave) {
-                producto_encontrado = i;
-                break;
-            }
-        }
+    Producto producto;
 
-        if (producto_encontrado == -1) {
-            printf("Producto no encontrado\n");
-            printf("Â¿Desea intentar de nuevo? (s/n): ");
-            char respuesta;
-            fflush(stdin);
-            scanf("%c", &respuesta);
-
-            if (respuesta != 's' && respuesta != 'S') {
-                printf("Regresando al menu principal.\n");
-                return;
-            }
+    while (fread(&producto, sizeof(Producto), 1, archivo_productos) != 0) {
+        if (producto.clave == clave) {
+            producto_encontrado = 1;
+            break;
         }
     }
 
+    if (producto_encontrado == -1) {
+        printf("Producto no encontrado\n");
+        fclose(archivo_productos);
+        return;
+    }
 
-    Producto *producto = &productos[producto_encontrado];
-
-    printf("Producto encontrado: %s\n", producto->nombre);
+    printf("Producto encontrado: %s\n", producto.nombre);
     printf("Seleccione una opcion para editar:\n");
     printf("1. Cambiar precio\n");
     printf("2. Cambiar nombre del producto\n");
@@ -163,102 +164,135 @@ void editar_producto() {
     switch (opcion){
         case 1:
             printf("Ingrese nuevo precio: ");
-            scanf("%f", &precio);
-            producto->precio = nuevo_precio;
-            printf("Precio actualizado a: %.2f\n", precio);
-            sleep(2);
-            mostrar_menu();
+            scanf("%f", &nuevo_precio);
+            producto.precio = nuevo_precio;
             break;
         case 2:
             fflush(stdin);
             printf("Ingrese nuevo nombre del producto: ");
-            fgets(producto->nombre, 50, stdin);
-            size_t len = strlen(producto->nombre);
-            if (producto->nombre[len - 1] == '\n') {
-                producto->nombre[len - 1] == '\0';
+            fgets(nombre_nuevo, 50, stdin);
+            size_t len = strlen(nombre_nuevo);
+            if (nombre_nuevo[len - 1] == '\n') {
+                nombre_nuevo[len - 1] == '\0';
             }
-            printf("Nombre actualizado a: %s\n", producto->nombre);
-            sleep(2);
-            mostrar_menu();
+            strcpy(producto.nombre, nombre_nuevo);
             break;
         default:
             printf("Opcion invalida\n");
-            break;
+            fclose(archivo_productos);
+            return;
     }
-    actualizar_producto(productos, total);
-    printf("Producto actualizado con exito\n");
+
+    fseek(archivo_productos, -sizeof(Producto), SEEK_CUR);
+    fwrite(&producto, sizeof(Producto), 1, archivo_productos);
+    fclose(archivo_productos);
+
+    obtener_fecha(fecha_str, sizeof(fecha_str));
+    printf("Producto actualizado con exito el %s\n", fecha_str);
     sleep(3);
+
 }
 
 
 
 //funcion para consulta por tipo
 void consulta_tipo() {
-    Producto productos[100];
-    int total = leer_productos(productos, 100);
-
-    if (total == 0) {
-        printf("No hay productos en el archivo\n");
-        sleep(2);
-        return;
-    }
-
+Producto *productos = NULL;
+    int total = 0;
+    char fecha_str[11];
     int tipo;
-    printf("Ingrese tipo de producto \n1: Escritorios\n2: Archiveros\n3: Sillas\n4: Mesas de centro\n5: Mesas ejecutivas\n6: Sofas\n");
+    int found = 0;
+    FILE *archivo_productos;
+
+    printf("Ingrese tipo de producto:\n1: Escritorios\n2: Archiveros\n3: Sillas\n4: Mesas de centro\n5: Mesas ejecutivas\n6: Sofas\n");
     scanf("%d", &tipo);
 
-    system("cls");
-    printf("Productos del tipo %d:\n", tipo);
-    int i;
-    for (i = 0; i < total; i++) {
-        Producto *producto = &productos[i]; // Usando ->
-        if (producto->tipo_producto == tipo && producto->estatus == 1) {
-            printf("Clave: %d, Nombre: %s, Descripcion: %s, Cantidad: %d, Precio: %.2f\n", producto->clave, producto->nombre, producto->descripcion, producto->cantidad, producto->precio);
-        }
-    }
-    sleep(2);
-    mostrar_menu();
-}
-
-//funcion para consulta por clavep
-void consulta_clave() {
-    Producto productos[100];
-    int total = leer_productos(productos, 100);
-    int clave;
-
-    if (total == 0) {
-        printf("No hay productos en el archivo.\n");
-        sleep(2);
+    archivo_productos = fopen("./bin/productos.bin", "rb");
+    if (archivo_productos == NULL) {
+        printf("Error al abrir el archivo de productos\n");
         return;
     }
 
-    printf("Ingrese clave del producto: ");
-    scanf("%d", &clave);
-	int i=0;
+    productos = malloc(sizeof(Producto)); // Reservamos espacio para un solo producto inicialmente
     system("cls");
-    int producto_encontrado = -1;
-    for ( i = 0; i < total; i++) {
-        Producto *producto = &productos[i];
-        if (producto->clave == clave && producto->estatus == 1) {
-            producto_encontrado = i;
+    printf("\n");
+
+    printf("Productos del tipo %d:\n\n", tipo);
+
+
+     while (fread(&productos[total], sizeof(Producto), 1, archivo_productos) != 0) {
+        if (productos[total].tipo_producto == tipo && productos[total].estatus == 1) {
+            printf("                       Comercializadora Fuentes\n\n");
+            printf("                    Consulta por Tipo de Producto %d\n\n", tipo);
+            obtener_fecha(fecha_str, sizeof(fecha_str));
+            printf("Fecha de consulta: %s", fecha_str);
+            printf("%*s\n\n", (80 + strlen("")) / 2, "");
+            printf("Clave: %d", productos[total].clave);
+            printf("\nNombre: %s", productos[total].nombre);
+            printf("\nDescripcion: %s", productos[total].descripcion);
+            printf("\nCantidad en existencia: %d", productos[total].cantidad);
+            printf("\nPrecio: %.2f", productos[total].precio);
+            printf("\n\n");
+            found = 1;
+            total++;
+            productos = realloc(productos, (total + 1) * sizeof(Producto)); // Añadimos espacio para otro producto
+        }
+    }
+
+    if (!found) {
+        printf("No hay productos de este tipo\n");
+    }
+
+    fclose(archivo_productos);
+    free(productos);
+}
+
+
+//funcion para consulta por clavep
+void consulta_clave(int clave) {
+    FILE *archivo_productos;
+    Producto producto;
+    int found = 0;
+    char fecha_str[11];
+
+
+    archivo_productos = fopen("./bin/productos.bin", "rb");
+    if (archivo_productos == NULL) {
+        printf("Error al abrir el archivo de productos\n");
+        return;
+    }
+    system("cls");
+    printf("                       Comercializadora Fuentes\n\n");
+    printf("                         Consulta por Producto");
+    printf("%*s\n\n", (80 + strlen("")) / 2, "");
+
+
+
+    while (fread(&producto, sizeof(Producto), 1, archivo_productos) != 0) {
+        if (producto.clave == clave) {
+            printf("Clave: %d\n", producto.clave);
+            printf("Nombre: %s", producto.nombre);
+            printf("Descripcion: %s", producto.descripcion);
+            printf("Cantidad en existencia: %d\n", producto.cantidad);
+            printf("Precio: %.2f\n", producto.precio);
+            printf("Estatus: %s\n", producto.estatus ? "Activo" : "Inactivo");
+            found = 1;
             break;
         }
     }
 
-    if (producto_encontrado == -1) {
-        printf("Producto no encontrado.\n");
-        sleep(2);
-        return;
+
+    if (!found) {
+        printf("Producto no encontrado\n");
     }
 
-    Producto *producto = &productos[producto_encontrado];
-    printf("Clave: %d, Nombre: %s, Descripcion: %s, Cantidad: %d, Precio: %.2f\n", producto->clave, producto->nombre, producto->descripcion, producto->cantidad, producto->precio);
-    sleep(2);
-    mostrar_menu();
+    fclose(archivo_productos);
 }
 
+
 void mostrar_menu() {
-	fflush(stdin);
+    int opcion, clave, tipo;
+    do{
     system("cls");
     printf("Menu Producto\n");
     printf("1. Nuevo Producto\n");
@@ -266,7 +300,6 @@ void mostrar_menu() {
     printf("3. Consultar producto\n");
     printf("4. Regresar al menu principal\n");
 
-    int opcion;
     printf("Seleccione una opcion: ");
     scanf("%d", &opcion);
 
@@ -289,16 +322,17 @@ void mostrar_menu() {
 
             switch (subopcion_cons) {
                 case 1:
-                    consulta_tipo(); // Consulta por tipo de producto
+                    consulta_tipo();
                     break;
                 case 2:
-                    consulta_clave(); // Consulta por clave de producto
+                    printf("Ingrese la clave del producto: ");
+                    scanf("%d", &clave);
+                    consulta_clave(clave);
                     break;
                 case 3:
-                    break; //regrese a los
+                    break;
                 default:
-                    printf("Opcion invalida.\n");
-                    mostrar_menu();
+                    printf("Opcion invalida\n");
                     break;
             }
             break;
@@ -307,8 +341,9 @@ void mostrar_menu() {
             return;
 
         default:
-            printf("Opcion invalida.\n");
-            mostrar_menu();
+            printf("Opcion invalida\n");
             break;
     }
+    } while (opcion != 4);
 }
+
