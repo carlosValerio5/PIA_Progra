@@ -3,11 +3,11 @@
 #include <string.h>
 #include <unistd.h> // Para sleep
 #include <time.h>
-#include "producto.h"
+#include "lib/producto.h"
 
 //funcion para guardar productos
 void guardar_producto(Producto *producto) {
-    FILE *file = fopen("./bin/productos.bin", "ab");//modo para añadir
+    FILE *file = fopen("./bin/productos.bin", "ab");//modo para aï¿½adir
     if (file != NULL) {
         fwrite(producto, sizeof(Producto), 1, file);//guarda un producto2
         fclose(file);
@@ -235,7 +235,7 @@ Producto *productos = NULL;
             printf("\n\n");
             found = 1;
             total++;
-            productos = realloc(productos, (total + 1) * sizeof(Producto)); // Añadimos espacio para otro producto
+            productos = realloc(productos, (total + 1) * sizeof(Producto)); // Aï¿½adimos espacio para otro producto
         }
     }
 
