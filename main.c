@@ -7,7 +7,7 @@
 #include "login.c"
 #include "producto.c"
 
-void menuPrincipal(){
+void menuPrincipaladmin(){
 	printf("\nComercializadora Fuentes");
 	printf("\n1. Clientes");
 	printf("\n2. Productos");
@@ -17,6 +17,15 @@ void menuPrincipal(){
 	printf("\n6. Salir");
 	printf("\nSeleccione una opcion: ");
     return;
+}
+
+void menuPrincipalventas(){
+	printf("\nComcercializadora Fuentes");
+	printf("\n1. Clientes");
+	printf("\n2. Ventas");
+	printf("\n3. Salir");
+	printf("\nSeleccione una opcion: ");
+	return;
 }
 
 int main(){
@@ -63,144 +72,228 @@ int main(){
     dataU comparar;
     if (!loginUsuario(&comparar)){
         int opcionPrincipal = 0;
-	    while(opcionPrincipal!= 6){
-			system("cls");
-	        menuPrincipal();
-            scanf("%d", &opcionPrincipal);
-	    	while(opcionPrincipal<0||opcionPrincipal>6){
-	    		printf("\nOpcion Invalida, ingrese un numero entre 1 y 6");
-	    		Sleep(2000);
-	    		system("cls");
-	    		menuPrincipal();
-	    		scanf("%d", &opcionPrincipal);
-	    	}
-			system("cls");
-	    	if(opcionPrincipal == 1){
-	    		//Clientes
-				int opcClientes = 0, opcsubClientes = 0;
-				while (opcClientes != 4){
-					menuClientes();
-					printf("\nIngrese una opcion: ");
-					scanf("%d", &opcClientes);
-					while(opcClientes>4 || opcClientes <0){
-						printf("\nOpcion Invalida, ingrese un numero entre 1 y 4");
-						Sleep(2000);
-						system("cls");
-						menuClientes();
-						printf("\nIngrese una opcion: ");
-						scanf("%d", &opcClientes);
-					}
-					if (opcClientes==1){
-						if (nuevoCliente()!= 0){
-							printf("Error al crear nuevo cliente");
-						}
-					}
-					else if (opcClientes== 2){
-						if (eliminarCliente()!= 0){
-							printf("Error al eliminar cliente");
-						}
-					}
-					else if (opcClientes == 3){
-						submenuClientes();
-						printf("\nIngrese una opcion: ");
-						scanf("%d", &opcsubClientes);
-						while (opcsubClientes <0 || opcsubClientes >2)
-						{
-							printf("\nOpcion Invalida, ingrese un numero entre 1 y 2");
-						    Sleep(2000);
-						    system("cls");
-						    submenuClientes();
-							printf("\nIngrese una opcion: ");
-						    scanf("%d", &opcsubClientes);
-						}
-						if (opcsubClientes == 1){
-							consultaNom();
-							printf("\nPresione enter para continuar...");
-							fflush(stdin);
-							getchar();
-						}
-						else if(opcsubClientes == 2){
-							cliente vacio;
-							consultaClav(&vacio);
-							printf("\nPresione enter para continuar...");
-							fflush(stdin);
-							getchar();
-						}
-					}
-				}
-	    	}
-	    	else if (opcionPrincipal == 2){
-	    		//Producto
-				if(comparar.tipoUsuario == 0){
-					printf("\nOpcion solo para administradores.");
-					printf("\n");
-					system("pause");
-					continue;
-				}
-				mostrar_menu();
-	    	}
-	    	else if (opcionPrincipal == 3){
-    
-                // Apartado de ventas (Esto va dentro de un switch op 3)______________________________________________________________
-                int op;
-                do{
-	                op = menuF(); // Tomara la opcion que eligio el usuario del Primer menu de ventas
-	                switch (op)
-	                {
-	                    case 1:
-	                    	//nuevoCliente();
-	                		//nuevo_producto();
-	                        procesoTicket();
-	                    break;
-	                    case 2:
-	                        op = menuReporte();
-	                        if(op == 1)
-	                        {
-	                        	mostrarDatosDeHoy();
-	                        }
-	                        else
-	                        {
-	                        	mostrarVentasPorCliente();
-	                        }
-	                    break;
-	                    case 3:
-	                    break;
-	                    //____________________________________________________________________________________________________________
-	                }
-        	    }while(op!=100);
-	    	}
-			else if (opcionPrincipal == 4){
-				//Inventario
-				if(comparar.tipoUsuario == 0){
-					printf("\nOpcion solo para administradores.");
-					printf("\n");
-					system("pause");
-					continue;
-				}
+		if (comparar.tipoUsuario == 1){
+	        while(opcionPrincipal!= 6){
+		    	system("cls");
+	            menuPrincipaladmin();
+                scanf("%d", &opcionPrincipal);
+	        	while(opcionPrincipal<0||opcionPrincipal>6){
+	        		printf("\nOpcion Invalida, ingrese un numero entre 1 y 6");
+	        		Sleep(2000);
+	        		system("cls");
+	        		menuPrincipaladmin();
+	        		scanf("%d", &opcionPrincipal);
+	        	}
+		    	system("cls");
+	        	if(opcionPrincipal == 1){
+	        		//Clientes
+		    		int opcClientes = 0, opcsubClientes = 0;
+		    		while (opcClientes != 4){
+		    			menuClientes();
+		    			printf("\nIngrese una opcion: ");
+		    			scanf("%d", &opcClientes);
+		    			while(opcClientes>4 || opcClientes <0){
+		    				printf("\nOpcion Invalida, ingrese un numero entre 1 y 4");
+		    				Sleep(2000);
+		    				system("cls");
+		    				menuClientes();
+		    				printf("\nIngrese una opcion: ");
+		    				scanf("%d", &opcClientes);
+		    			}
+		    			if (opcClientes==1){
+		    				if (nuevoCliente()!= 0){
+		    					printf("Error al crear nuevo cliente");
+		    				}
+		    			}
+		    			else if (opcClientes== 2){
+		    				if (eliminarCliente()!= 0){
+		    					printf("Error al eliminar cliente");
+		    				}
+		    			}
+		    			else if (opcClientes == 3){
+		    				submenuClientes();
+		    				printf("\nIngrese una opcion: ");
+		    				scanf("%d", &opcsubClientes);
+		    				while (opcsubClientes <0 || opcsubClientes >2)
+		    				{
+		    					printf("\nOpcion Invalida, ingrese un numero entre 1 y 2");
+		    				    Sleep(2000);
+		    				    system("cls");
+		    				    submenuClientes();
+		    					printf("\nIngrese una opcion: ");
+		    				    scanf("%d", &opcsubClientes);
+		    				}
+		    				if (opcsubClientes == 1){
+		    					consultaNom();
+		    					printf("\nPresione enter para continuar...");
+		    					fflush(stdin);
+		    					getchar();
+		    				}
+		    				else if(opcsubClientes == 2){
+		    					cliente vacio;
+		    					consultaClav(&vacio);
+		    					printf("\nPresione enter para continuar...");
+		    					fflush(stdin);
+		    					getchar();
+		    				}
+		    			}
+		    		}
+	        	}
+	        	else if (opcionPrincipal == 2){
+	        		//Producto
+		    		mostrar_menu();
+	        	}
+	        	else if (opcionPrincipal == 3){
+        
+                    // Apartado de ventas (Esto va dentro de un switch op 3)______________________________________________________________
+                    int opVentas;
+					int op;
+                    do{
+	                    opVentas = menuF(); // Tomara la opcion que eligio el usuario del Primer menu de ventas
+	                    switch (opVentas)
+	                    {
+	                        case 1:
+	                        	//nuevoCliente();
+	                    		//nuevo_producto();
+	                            procesoTicket();
+	                        break;
+	                        case 2:
+	                            op = menuReporte();
+	                            if(op == 1)
+	                            {
+	                            	mostrarDatosDeHoy();
+	                            }
+	                            else
+	                            {
+	                            	mostrarVentasPorCliente();
+	                            }
+	                        break;
+	                        case 3:
+	                        break;
+	                        //____________________________________________________________________________________________________________
+	                    }
+            	    }while(opVentas!=3);
+	        	}
+		    	else if (opcionPrincipal == 4){
+		    		//Inventario
+		    	}
+		    	else if(opcionPrincipal == 5){
+		    		//Usuarios
+		    		int opcUsuarios;
+		    		do {
+		    		    opcUsuarios = menuUsuarios();
+		    		    if (opcUsuarios == 1){
+		    		    	nuevoU();
+		    		    }
+		    		    else if(opcUsuarios == 2){
+		    		    	EliminarUsuario();
+		    		    }
+		    		    else if(opcUsuarios == 3){
+		    		    	reactivarUsuario();
+		    		    }
+		    		}while(opcUsuarios!=4);
+		    	}
+	        }
+		}
+		else if(comparar.tipoUsuario == 0){
+			while(opcionPrincipal != 3){
+                system("cls");
+	            menuPrincipalventas();
+                scanf("%d", &opcionPrincipal);
+	        	while(opcionPrincipal<0||opcionPrincipal>6){
+	        		printf("\nOpcion Invalida, ingrese un numero entre 1 y 6");
+	        		Sleep(2000);
+	        		system("cls");
+	        		menuPrincipalventas();
+	        		scanf("%d", &opcionPrincipal);
+	        	}
+		    	system("cls");
+                if(opcionPrincipal == 1){
+	        		//Clientes
+		    		int opcClientes = 0, opcsubClientes = 0;
+		    		while (opcClientes != 4){
+		    			menuClientes();
+		    			printf("\nIngrese una opcion: ");
+		    			scanf("%d", &opcClientes);
+		    			while(opcClientes>4 || opcClientes <0){
+		    				printf("\nOpcion Invalida, ingrese un numero entre 1 y 4");
+		    				Sleep(2000);
+		    				system("cls");
+		    				menuClientes();
+		    				printf("\nIngrese una opcion: ");
+		    				scanf("%d", &opcClientes);
+		    			}
+		    			if (opcClientes==1){
+		    				if (nuevoCliente()!= 0){
+		    					printf("Error al crear nuevo cliente");
+		    				}
+		    			}
+		    			else if (opcClientes== 2){
+		    				if (eliminarCliente()!= 0){
+		    					printf("Error al eliminar cliente");
+		    				}
+		    			}
+		    			else if (opcClientes == 3){
+		    				submenuClientes();
+		    				printf("\nIngrese una opcion: ");
+		    				scanf("%d", &opcsubClientes);
+		    				while (opcsubClientes <0 || opcsubClientes >2)
+		    				{
+		    					printf("\nOpcion Invalida, ingrese un numero entre 1 y 2");
+		    				    Sleep(2000);
+		    				    system("cls");
+		    				    submenuClientes();
+		    					printf("\nIngrese una opcion: ");
+		    				    scanf("%d", &opcsubClientes);
+		    				}
+		    				if (opcsubClientes == 1){
+		    					consultaNom();
+		    					printf("\nPresione enter para continuar...");
+		    					fflush(stdin);
+		    					getchar();
+		    				}
+		    				else if(opcsubClientes == 2){
+		    					cliente vacio;
+		    					consultaClav(&vacio);
+		    					printf("\nPresione enter para continuar...");
+		    					fflush(stdin);
+		    					getchar();
+		    				}
+		    			}
+		    		}
+	        	}
+	        	else if (opcionPrincipal == 2){
+        
+                    // Apartado de ventas (Esto va dentro de un switch op 3)______________________________________________________________
+                    int opVentas, op;
+                    do{
+	                    opVentas = menuF(); // Tomara la opcion que eligio el usuario del Primer menu de ventas
+	                    switch (opVentas)
+	                    {
+	                        case 1:
+	                        	//nuevoCliente();
+	                    		//nuevo_producto();
+	                            procesoTicket();
+	                        break;
+	                        case 2:
+	                            op = menuReporte();
+	                            if(op == 1)
+	                            {
+	                            	mostrarDatosDeHoy();
+	                            }
+	                            else
+	                            {
+	                            	mostrarVentasPorCliente();
+	                            }
+	                        break;
+	                        case 3:
+	                        break;
+	                        //____________________________________________________________________________________________________________
+	                    }
+            	    }while(opVentas!=3);
+	        	}
 			}
-			else if(opcionPrincipal == 5){
-				//Usuarios
-				if(comparar.tipoUsuario == 0){
-					printf("\nOpcion solo para administradores.");
-					printf("\n");
-					system("pause");
-					continue;
-				}
-				int opcUsuarios;
-				do {
-				    opcUsuarios = menuUsuarios();
-				    if (opcUsuarios == 1){
-				    	nuevoU();
-				    }
-				    else if(opcUsuarios == 2){
-				    	EliminarUsuario();
-				    }
-				    else if(opcUsuarios == 3){
-				    	reactivarUsuario();
-				    }
-				}while(opcUsuarios!=4);
-			}
-	    }
+		}
     } 
 
     return 0;
