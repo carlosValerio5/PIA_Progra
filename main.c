@@ -137,6 +137,7 @@ int main(){
 					system("pause");
 					continue;
 				}
+				mostrar_menu();
 	    	}
 	    	else if (opcionPrincipal == 3){
     

@@ -31,15 +31,14 @@ typedef enum {
 void guardar_producto(Producto *producto);
 int leer_productos(Producto *productos, int max_productos);
 int verificar_clave(int clave);
-void obtener_fecha(char *fecha_strF, size_t max_len);
+void obtener_fecha2(char *fecha_strF, size_t max_len);
 
 
 void mostrar_menu();
-void mostrar_submenu_consulta();
 
 void nuevo_producto();
 void editar_producto();
 void consulta_tipo();
-void consulta_clave();
+void consulta_clave(int );
 
 #endif

@@ -46,7 +46,7 @@ int verificar_clave(int clave) {
 }
 
 //para obtener fecha
-void obtener_fecha(char *fecha_strF, size_t max_len) {
+void obtener_fecha2(char *fecha_strF, size_t max_len) {
     // Obtenemos la fecha actual
     time_t t = time(NULL);
     struct tm *fecha_actual = localtime(&t);
@@ -183,7 +183,7 @@ void editar_producto() {
             return;
     }
 
-    fseek(archivo_productos, -sizeof(Producto), SEEK_CUR);
+    fseek(archivo_productos, -(long)sizeof(Producto), SEEK_CUR);
     fwrite(&producto, sizeof(Producto), 1, archivo_productos);
     fclose(archivo_productos);
 
@@ -220,10 +220,10 @@ Producto *productos = NULL;
     printf("Productos del tipo %d:\n\n", tipo);
 
 
+    printf("                       Comercializadora Fuentes\n\n");
+    printf("                    Consulta por Tipo de Producto %d\n\n", tipo);
      while (fread(&productos[total], sizeof(Producto), 1, archivo_productos) != 0) {
         if (productos[total].tipo_producto == tipo && productos[total].estatus == 1) {
-            printf("                       Comercializadora Fuentes\n\n");
-            printf("                    Consulta por Tipo de Producto %d\n\n", tipo);
             obtener_fecha(fecha_str, sizeof(fecha_str));
             printf("Fecha de consulta: %s", fecha_str);
             printf("%*s\n\n", (80 + strlen("")) / 2, "");
@@ -245,6 +245,7 @@ Producto *productos = NULL;
 
     fclose(archivo_productos);
     free(productos);
+    system("pause");
 }
 
 
@@ -285,7 +286,7 @@ void consulta_clave(int clave) {
     if (!found) {
         printf("Producto no encontrado\n");
     }
-
+    system("pause");
     fclose(archivo_productos);
 }
 
