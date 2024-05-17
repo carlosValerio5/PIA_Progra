@@ -1,12 +1,17 @@
 #include <stdio.h>
-#include "./lib/clientes.h"
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
 #include <windows.h> //libreria para el Sleep
+#include <pthread.h>
 
+#include "./lib/clientes.h"
 #include "./lib/VentasF.h" //Para obtener fecha
 
+typedef struct{
+    int num;
+    char nombre[50];
+}args;
 
 //Sirve para registrar a un nuevo cliente
 int nuevoCliente(void){
@@ -197,7 +202,7 @@ int limpiarArchivo(void){
 }
 
 int eliminarCliente(void){
-    int id;
+    int id, flag = 0;
     char opc;
     FILE *archClientes;
     cliente clseleccionado;
@@ -213,14 +218,17 @@ int eliminarCliente(void){
     scanf("%d", &id);
 
     //ciclo sigue hasta que la funcion fread lea el final del archivo
+    eliminar:
     while(fread(&clseleccionado, sizeof(cliente), 1, archClientes)>0){
         if(clseleccionado.ID == id){
             if(clseleccionado.estatus == 0){
                 printf("\nCliente ya esta dado de baja.");
+                flag = 1;
                 break;
             }
             else{
                 clseleccionado.estatus = 0;
+                flag = 1;
 
                 //Regresa el puntero del archivo un espacio atras para sobreescribir
                 if(fseek(archClientes, -(long)(sizeof(cliente)), SEEK_CUR) != 0){
@@ -236,30 +244,29 @@ int eliminarCliente(void){
                 }
                 else{
                     printf("\nCliente eliminado exitosamente.");
+                    Sleep(3000);
                     break;
                 }
             }
         }
-        else{
-            printf("\nID no encontrado. Desea hacer otra busqueda? [s/n]");
+    }
+    if (flag == 0){
+        printf("\nID no encontrado. Desea hacer otra busqueda? [s/n]");
+        fflush(stdin);
+        scanf("%c", &opc);
+        while (tolower(opc) != 's' && tolower(opc) != 'n'){
+            printf("Opcion invalida intente denuevo...");
+            printf("\nDesea hacer otra busqueda? [s/n]");
             fflush(stdin);
             scanf("%c", &opc);
-            while (tolower(opc) != 's' && tolower(opc) != 'n'){
-                printf("Opcion invalida intente denuevo...");
-                printf("\nDesea hacer otra busqueda? [s/n]");
-                fflush(stdin);
-                scanf("%c", &opc);
-            }
-            opc = tolower(opc);
-            if (opc == 's'){
-                rewind(archClientes);
-                printf("Ingrese el ID del cliente a eliminar: ");
-                fflush(stdin);
-                scanf("%d", &id);
-            }
-            else{
-                break;
-            }
+        }
+        opc = tolower(opc);
+        if (opc == 's'){
+            rewind(archClientes);
+            printf("Ingrese el ID del cliente a eliminar: ");
+            fflush(stdin);
+            scanf("%d", &id);
+            goto eliminar;
         }
     }
     fclose(archClientes);
@@ -269,7 +276,9 @@ int eliminarCliente(void){
 //Consultas:
 //Consulta de cliente por nombre
 
-int consultaNom(void){
+void *consultaNom(void *argumentos){
+    args *datos = (args *)argumentos;
+    int consultanum = datos->num;
     FILE *archClientes;
     cliente coincidencia;
     char nomjunto[200];
@@ -277,23 +286,22 @@ int consultaNom(void){
     char nom[50];
     int flag = 0;
     char fecha[11];
-
+    strcpy(nom, datos->nombre);
     obtener_fecha(fecha, sizeof(fecha));
 
     archClientes = fopen("./bin/clientes.bin", "rb");
     if (archClientes == NULL){
         printf("Error al abrir el archivo de clientes...");
         Sleep(3);
-        return 1;
+        return NULL;
     }
 
-    printf("\nIngrese el nombre del cliente a consultar: ");
-    fflush(stdin);
-    fgets(nom, sizeof(nom), stdin);
-    //Eliminar \n del nombre
-    newline = strstr(nom, "\n");
-    if(newline != NULL)
-        strncpy(newline, "\0", 1);
+    printf("\n-----------------------------------------------------------------------");
+    printf("\n\t\t\tComercializadora Fuentes\n\n\t\t\tConsulta Por Cliente");
+    printf("\n%s", fecha);
+    printf("\n\n\t\t\tPor Nombre");
+    printf("\nNumero de consulta: %d", consultanum);
+    printf("\nNombre\t\t\tClave\tDireccion\t\tTelefono\tCorreo Electronico\tEstatus");
     while(fread(&coincidencia, sizeof(cliente), 1, archClientes)>0){
         //Reiniciar la variable nomjunto
         strcpy(nomjunto, "");
@@ -304,12 +312,7 @@ int consultaNom(void){
         strcat(nomjunto, coincidencia.apellidoP);
         strcat(nomjunto, " ");
         strcat(nomjunto, coincidencia.apellidoM);
-
         if((strcmp(coincidencia.nombre, nom))==0){
-            printf("\n\t\t\tComercializadora Fuentes\n\n\t\t\tConsulta Por Cliente");
-            printf("\n%s", fecha);
-            printf("\n\n\t\t\tPor Nombre");
-            printf("\nNombre\t\t\tClave\tDireccion\t\tTelefono\tCorreo Electronico\tEstatus");
             printf("\n%s %s %s", coincidencia.nombre, coincidencia.apellidoP, coincidencia.apellidoM);
             printf("\t%d", coincidencia.ID);
             printf("\t%s %s %d %d", coincidencia.dir.colonia, coincidencia.dir.calle, coincidencia.dir.numero, coincidencia.dir.cp);
@@ -319,11 +322,6 @@ int consultaNom(void){
             flag = 1;
         }
         else if ((strcmp(coincidencia.apellidoP, nom))==0){
-            printf("\n-----------------------------------------------------------------------");
-            printf("\n\t\t\tComercializadora Fuentes\n\n\t\t\tConsulta Por Cliente");
-            printf("\n%s", fecha);
-            printf("\n\n\t\t\tPor Nombre");
-            printf("\nNombre\t\t\tClave\tDireccion\t\tTelefono\tCorreo Electronico\tEstatus");
             printf("\n%s %s %s", coincidencia.nombre, coincidencia.apellidoP, coincidencia.apellidoM);
             printf("\t%d", coincidencia.ID);
             printf("\t%s %s %d %d", coincidencia.dir.colonia, coincidencia.dir.calle, coincidencia.dir.numero, coincidencia.dir.cp);
@@ -333,11 +331,6 @@ int consultaNom(void){
             flag = 1;
         }
         else if ((strcmp(coincidencia.apellidoP, nom))==0){
-            printf("\n-----------------------------------------------------------------------");
-            printf("\n\t\t\tComercializadora Fuentes\n\n\t\t\tConsulta Por Cliente");
-            printf("\n%s", fecha);
-            printf("\n\n\t\t\tPor Nombre");
-            printf("\nNombre\t\t\tClave\tDireccion\t\tTelefono\tCorreo Electronico\tEstatus");
             printf("\n%s %s %s", coincidencia.nombre, coincidencia.apellidoP, coincidencia.apellidoM);
             printf("\t%d", coincidencia.ID);
             printf("\t%s %s %d %d", coincidencia.dir.colonia, coincidencia.dir.calle, coincidencia.dir.numero, coincidencia.dir.cp);
@@ -347,11 +340,6 @@ int consultaNom(void){
             flag = 1;
         }
         else if ((strcmp(nomjunto, nom))==0){
-            printf("\n-----------------------------------------------------------------------");
-            printf("\n\t\t\tComercializadora Fuentes\n\n\t\t\tConsulta Por Cliente");
-            printf("\n%s", fecha);
-            printf("\n\n\t\t\tPor Nombre");
-            printf("\nNombre\t\t\tClave\tDireccion\t\tTelefono\tCorreo Electronico\tEstatus");
             printf("\n%s %s %s", coincidencia.nombre, coincidencia.apellidoP, coincidencia.apellidoM);
             printf("\t%d", coincidencia.ID);
             printf("\t%s %s %d %d", coincidencia.dir.colonia, coincidencia.dir.calle, coincidencia.dir.numero, coincidencia.dir.cp);
@@ -365,7 +353,7 @@ int consultaNom(void){
         printf("\nNo se encontraron coincidencias.");
     }
     fclose(archClientes);
-    return 0;
+    return NULL;
 }
 
 //Consulta Clave
@@ -428,4 +416,50 @@ void submenuClientes(){
     printf("\n\t1. Por Nombre");
     printf("\n\t2. Por Clave");
     return;
+}
+
+
+//Funcion para usar hilos para busqueda con nombre
+void clienteThread(){
+    int opc;
+    char *newline;
+    args argumentos;
+    argumentos.num = 1;
+    printf("\nIngrese el nombre del cliente a consultar: ");
+    fflush(stdin);
+    fgets(argumentos.nombre, sizeof(argumentos.nombre), stdin);
+    //Eliminar \n del nombre
+    newline = strstr(argumentos.nombre, "\n");
+    if(newline != NULL)
+        strncpy(newline, "\0", 1);
+    pthread_t *thread_id = (pthread_t *)malloc(sizeof(pthread_t));
+    printf("%d", sizeof(thread_id));
+    pthread_create(thread_id, NULL, consultaNom, (void *)&argumentos);
+    pthread_join(*thread_id, NULL);
+    do{
+        printf("\nDesea hacer una busqueda simultanea? [1:si, 0:no]");
+        fflush(stdin);
+        scanf("%d", &opc);
+        while(opc != 1 && opc != 0){
+            printf("\nOpcion invalida.");
+            printf("\nDesea hacer una busqueda simultanea? [1:si, 0:no]");
+            fflush(stdin);
+            scanf("%d", &opc);
+        }
+        if (opc){
+            argumentos.num++;
+            printf("\nIngrese el nombre del cliente a consultar: ");
+            fflush(stdin);
+            fgets(argumentos.nombre, sizeof(argumentos.nombre), stdin);
+            //Eliminar \n del nombre
+            newline = strstr(argumentos.nombre, "\n");
+            if(newline != NULL)
+                strncpy(newline, "\0", 1);
+            if (pthread_create((thread_id), NULL, consultaNom, (void *)&argumentos)!=0)
+                printf("Error");
+            if (pthread_join(*(thread_id), NULL)!=0){
+                printf("Error");
+            }
+        }
+    }while(opc);
 }

@@ -124,7 +124,7 @@ int main(){
 		    				    scanf("%d", &opcsubClientes);
 		    				}
 		    				if (opcsubClientes == 1){
-		    					consultaNom();
+		    					clienteThread();
 		    					printf("\nPresione enter para continuar...");
 		    					fflush(stdin);
 		    					getchar();
@@ -247,7 +247,7 @@ int main(){
 		    				    scanf("%d", &opcsubClientes);
 		    				}
 		    				if (opcsubClientes == 1){
-		    					consultaNom();
+		    					clienteThread();
 		    					printf("\nPresione enter para continuar...");
 		    					fflush(stdin);
 		    					getchar();

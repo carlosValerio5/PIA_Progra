@@ -31,12 +31,14 @@ int limpiarArchivo(void);
 
 int eliminarCliente(void);
 
-int consultaNom(void);
+void *consultaNom(void *);
 
 void consultaClav(cliente *);
 
 void menuClientes(void);
 
 void submenuClientes(void);
+
+void clienteThread(void);
 
 #endif
