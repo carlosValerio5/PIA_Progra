@@ -186,6 +186,19 @@ int main(){
 					system("pause");
 					continue;
 				}
+				int opcUsuarios;
+				do {
+				    opcUsuarios = menuUsuarios();
+				    if (opcUsuarios == 1){
+				    	nuevoU();
+				    }
+				    else if(opcUsuarios == 2){
+				    	EliminarUsuario();
+				    }
+				    else if(opcUsuarios == 3){
+				    	reactivarUsuario();
+				    }
+				}while(opcUsuarios!=4);
 			}
 	    }
     } 

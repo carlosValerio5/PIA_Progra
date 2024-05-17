@@ -17,8 +17,8 @@ int menuUsuarios(void)
 	do
 	{
 		
-		printf("\n\t1.- Nuevo Usuario\n\t2.- Eliminar Usuario\n\t3.- Activar Usuario\n\t4.- Regresar Menú Principal");
-		printf("\nSeleccione una opción: ");
+		printf("\n\t1.- Nuevo Usuario\n\t2.- Eliminar Usuario\n\t3.- Activar Usuario\n\t4.- Regresar Menu Principal");
+		printf("\nSeleccione una opcion: ");
 		scanf("%d", &op);
 		Sleep(1);
 	}while(op <=0 || op >4);
@@ -59,7 +59,7 @@ void nuevoU()
     fgets(usuarioF.nombreUsuario, 30, stdin);
     usuarioF.nombreUsuario[strcspn(usuarioF.nombreUsuario, "\n")] = '\0'; 
 
-    printf("\nContraseña: ");
+    printf("\nContrasena: ");
     fflush(stdin);
     fgets(usuarioF.contra, 20, stdin);
     usuarioF.contra[strcspn(usuarioF.contra, "\n")] = '\0'; 
@@ -73,7 +73,7 @@ void nuevoU()
     fgets(usuarioF.direccion.colonia, 20, stdin);
     usuarioF.direccion.colonia[strcspn(usuarioF.direccion.colonia, "\n")] = '\0';
 
-    printf("\nNúmero: ");
+    printf("\nNumero: ");
     fflush(stdin);
     scanf("%d", &(usuarioF.direccion.numero));
     
@@ -109,7 +109,7 @@ void nuevoU()
     fwrite(&usuarioF, sizeof(dataU), 1, archivos);
     fclose(archivos);
 	printf("\nUsuario agregado");
-	Sleep(2);
+	Sleep(2000);
 }
 
 
@@ -166,7 +166,7 @@ void EliminarUsuario(void) //Funcion para eliminar el usuario
 					fseek(archivos, -(long)sizeof(dataU),SEEK_CUR);//Nos movemos a la posicion de la estructura a modificar
 					fwrite(&usuario, sizeof(dataU), 1, archivos);
 					printf("\nUsuario eliminado con exito");
-					Sleep(1);
+					Sleep(1000);
 					break;
 				}else{
 					break;
@@ -174,7 +174,7 @@ void EliminarUsuario(void) //Funcion para eliminar el usuario
 				
 			}else if(strcmp(nombre,usuario.nombre) ==0  && usuario.status ==0){
 				printf("\nEl usuario ya esta dado de baja");
-				Sleep(1);
+				Sleep(1000);
 				break;
 			}
 		}
@@ -231,14 +231,14 @@ void reactivarUsuario(void) //Funcion para activar el usuario (SIMILAR A ELIMINA
 			//Cambio de status
 			if(strcmp(nombre,usuario.nombre) ==0  && usuario.status !=1)
 			{
-				printf("\nDesea dar de activar el usuario (Si = 0 / No = 1)? ");
+				printf("\nDesea activar el usuario (Si = 0 / No = 1)? ");
 				scanf("%d", &op);
 				if(op == 0){
 					usuario.status = 1;//Cambiamos el status
 					fseek(archivos, -(long)sizeof(dataU),SEEK_CUR);//Nos movemos a la posicion de la estructura a modificar
 					fwrite(&usuario, sizeof(dataU), 1, archivos);
 					printf("\nUsuario actualizado con exito");
-					Sleep(1);
+					Sleep(1000);
 					break;
 				}else{
 					break;
@@ -246,7 +246,7 @@ void reactivarUsuario(void) //Funcion para activar el usuario (SIMILAR A ELIMINA
 				
 			}else if(strcmp(nombre,usuario.nombre) ==0  && usuario.status ==1){
 				printf("\nEl usuario no esta dado de baja");
-				Sleep(1);
+				Sleep(1000);
 				break;
 			}
 		}

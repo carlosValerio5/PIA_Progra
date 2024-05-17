@@ -86,7 +86,7 @@ int confirmarUsuario(dataU *comparar, int *intento, char *pasado){
         }
         //Si el usuario ingresado ya se encuentra desactivado, se le notifica al usuario
         else if(strcmp(temp.nombreUsuario, comparar->nombreUsuario)==0 && temp.status == 0){
-            printf("Usuario se encuentra desactivado.");
+            printf("\nUsuario se encuentra desactivado.");
             fclose(archUsuario);
             return -1;
         }
