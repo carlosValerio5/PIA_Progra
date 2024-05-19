@@ -131,7 +131,7 @@ void editar_producto() {
     char nombre_nuevo[50];
     char fecha_str[11];
 
-    FILE *archivo_productos = fopen("./bin/productos.bin", "r+b");
+    FILE *archivo_productos = fopen("./bin/productos.bin", "rb+");
     if (archivo_productos == NULL) {
         printf("Error al abrir el archivo de productos\n");
         return;

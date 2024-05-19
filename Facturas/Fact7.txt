@@ -1,0 +1,14 @@
+
+
+		Ticket de compra:
+Cliente: Juanito
+Fecha: 2024-05-19
+Folio: 7
+Productos comprados:
+1. Silla Oficina
+
+
+Subtotal: 34,00
+Descuento: 0,00
+IVA: 5,44
+Total: 39,44

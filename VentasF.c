@@ -27,7 +27,7 @@ void obtener_fecha(char *fecha_strF, size_t max_len) //Funcion para obtener una 
 
 int menuF(void) //Esta funcion solo muestra el menu de ventas y retorna la opcion elegida
 {
-    //system("cls");
+    system("cls");
     setlocale(LC_ALL, "spanish");//Cambiamos el idioma a espaÃ±ol REVISAR SI FUNCIONA EN TODAS LAS MAQUINAS
     int op;
     //system("cls");
@@ -37,6 +37,7 @@ int menuF(void) //Esta funcion solo muestra el menu de ventas y retorna la opcio
         scanf("%d", &op);
     } while(op > 3 || op <1);
     return op;
+    Sleep(2000);
 
 }
 
@@ -46,10 +47,11 @@ int menuReporte(void)
     int op;
     system("cls");
     do{
-        printf("\n\n\t1.- DÃ­a\n\t2.- Cliente\nIngresa una opciÃ³n: ");
+        printf("\n\n\t1.- Dia\n\t2.- Cliente\nIngresa una opcion: ");
         scanf("%d", &op);
     } while(op != 1 && op != 2);
     return op;
+    Sleep(2000);
 }
 
 
@@ -124,19 +126,17 @@ int consultaClavP(Producto *ProductoVf){
 }
 
 
-void procesoVenta(dataV *ventaF, infoI *InfoEF)
+void procesoVenta(dataV *ventaF, infoI *InfoEF, char ***cadenas, int *tamanio)
 {
     int cantidad, op;
     Producto ProductoV;
-        
-    
+    Producto ProductoC;
+	 
     
     if(consultaClavP(&ProductoV) !=0)
     {
         ventaF->ID_Producto = ProductoV.clave;
         ventaF->precio = ProductoV.precio;
-        
-        
         
         
         printf("\nInformacion de producto: \nDescripcion: %s \nExistencia: %d \nPrecio: %.2f", ProductoV.descripcion, ProductoV.cantidad, ProductoV.precio );
@@ -146,7 +146,39 @@ void procesoVenta(dataV *ventaF, infoI *InfoEF)
         }while(cantidad < 1 || cantidad > ProductoV.cantidad);
         ventaF->cantidadC = cantidad;
         InfoEF->subtotal+= ProductoV.precio*cantidad;
-
+        
+        //Proceso cambio de stock
+        ProductoV.cantidad-= ventaF->cantidadC;
+        FILE*archProd = fopen("./bin/productos.bin", "rb+");
+        rewind(archProd);
+        while(fread(&ProductoC, sizeof(Producto),1,archProd)!=0)
+        {
+        	if(ProductoC.clave == ProductoV.clave)
+        	{
+        		fseek(archProd, -(long)sizeof(Producto),SEEK_CUR);
+        		fwrite(&ProductoV, sizeof(Producto),1,archProd);
+        		break;
+			}
+		}
+		fclose(archProd);
+		
+		//Esto es para poder almacenar los nombres de los productos
+		(*tamanio)++;
+		*cadenas = realloc(*cadenas, (*tamanio)*sizeof(char *));
+		if (*cadenas == NULL) {
+	        perror("Error al realocar memoria");
+	        exit(EXIT_FAILURE);
+	    }
+	    (*cadenas)[*tamanio - 1] = malloc((strlen(ProductoV.nombre) + 1) * sizeof(char));
+        if ((*cadenas)[*tamanio - 1] == NULL) {
+            perror("Error al asignar memoria para la nueva cadena");
+            exit(EXIT_FAILURE);
+        }
+        strcpy((*cadenas)[*tamanio - 1], ProductoV.nombre);
+	
+	
+		
+		
 
         FILE *archivoVentas = fopen("bin/VentasG.bin", "ab");
         fwrite(ventaF, sizeof(dataV), 1, archivoVentas);
@@ -156,7 +188,7 @@ void procesoVenta(dataV *ventaF, infoI *InfoEF)
         scanf("%d",&op);
         if(op == 1)
         {
-            procesoVenta(ventaF, InfoEF);
+            procesoVenta(ventaF, InfoEF, cadenas, tamanio);
         }else
         {
             return;
@@ -171,10 +203,17 @@ void procesoVenta(dataV *ventaF, infoI *InfoEF)
 
 void procesoTicket()
 {
+	system("cls");
     dataV venta;
     dataV ventaL;
     infoI infoE;
-    cliente clienteV;    
+    cliente clienteV;   
+	
+	
+	char **NombreProds = NULL;
+	int cantProd = 0, i;
+	
+	 
     if(consultaClav2(&clienteV) == 1)
     {
         venta.ID_Cliente=clienteV.ID;
@@ -201,7 +240,7 @@ void procesoTicket()
         strcpy(infoE.cliente, clienteV.nombre);
         infoE.subtotal =0.0;
 
-        procesoVenta(&venta, &infoE);
+        procesoVenta(&venta, &infoE, &NombreProds,&cantProd);
         if(infoE.subtotal ==0)
         {
         	return;
@@ -217,12 +256,68 @@ void procesoTicket()
 
         system("cls");
         printf("\n\n\t\tTicket de compra:");
+        printf("\nCliente: %s\n", infoE.cliente);
+        printf("Fecha: %s\n", infoE.fecha);
+        printf("Folio: %d\n", infoE.folio);
+        printf("Productos comprados:\n");
+        
+        for (i = 0; i < cantProd; i++) {
+            printf("%d. %s\n", i + 1, *(NombreProds+i));
+        }
+        printf("\nSubtotal: %.2f\n", infoE.subtotal);
+        printf("Descuento: %.2f\n", infoE.descuento);
+        printf("IVA: %.2f\n", infoE.iva);
+        printf("Total: %.2f\n", infoE.total);
+        
+        //Generacion del nombre del ticket
+        char nombreTicket[100];
+        strcpy(nombreTicket, "Facturas/Fact");
+        char numeroStr[10];
+        sprintf(numeroStr, "%d", venta.folio);
+        strcat(nombreTicket, numeroStr);
+        strcat(nombreTicket, ".txt");
+        //GUARDAMOS EL TICKET
+        FILE *archivoTicket = fopen(nombreTicket,"w");
+        if (archivoTicket == NULL) {
+        	perror("Error al abrir el archivo");
+        	return;
+    	}
+        fprintf(archivoTicket, "\n\n\t\tTicket de compra:");
+	    fprintf(archivoTicket, "\nCliente: %s\n", infoE.cliente);
+	    fprintf(archivoTicket, "Fecha: %s\n", infoE.fecha);
+	    fprintf(archivoTicket, "Folio: %d\n", infoE.folio);
+	    fprintf(archivoTicket, "Productos comprados:\n");
+	
+	    for (i = 0; i < cantProd; i++) {
+	        fprintf(archivoTicket, "%d. %s\n", i + 1, *(NombreProds+i));
+	    }
+	    
+	    fprintf(archivoTicket, "\nSubtotal: %.2f\n", infoE.subtotal);
+	    fprintf(archivoTicket, "Descuento: %.2f\n",  infoE.descuento);
+	    fprintf(archivoTicket, "IVA: %.2f\n", infoE.iva);
+	    fprintf(archivoTicket, "Total: %.2f\n", infoE.total);
+	
+	    fclose(archivoTicket);
+        
+        
+        
+        
+        
+        
+        for (i = 0; i < cantProd; i++) {
+            free(NombreProds[i]);
+        }
+        free(NombreProds);
+        system("pause");
     }
 
 }
 
 
+
+
 void mostrarDatosDeHoy() {
+	system("cls");
     // Obtener la fecha actual en formato de cadena (dd/mm/aaaa)
     char fecha_actual[11];
     obtener_fecha(fecha_actual, 11);
@@ -260,9 +355,11 @@ void mostrarDatosDeHoy() {
 	}
 
     fclose(archivo);
+    system("pause");
 }
 
 void mostrarVentasPorCliente() {
+	system("cls");
     cliente clienteV;
     infoI infoExtra;
     dataV infoV;
@@ -303,13 +400,13 @@ void mostrarVentasPorCliente() {
 							        infoProd.descripcion[longitud - 1] = '\0'; // Reemplaza el carácter de salto de línea con el terminador de cadena
 							    }
 							    printf("%-8s%-15s%-50s%-10s%-8s%-8s\n", "Folio", "Fecha", "Descripcion", "Cantidad", "Precio", "Total");
-								printf("%-8d%-15s%-50s%-10d%-8.2f%-8.2f\n", infoExtra.folio, infoExtra.fecha, infoProd.descripcion, infoV.cantidadC, infoProd.precio, infoExtra.total);
-								printf("%110s: %.2f\n%110s: %.2f\n%110s: %.2f\n%110s: %.2f\n\n\n", "Subtotal", infoExtra.subtotal, "Descuento", infoExtra.descuento, "IVA", infoExtra.iva, "Total", infoExtra.total);
+								printf("%-8d%-15s%-50s%-10d%-8.2f%-8.2f\n", infoExtra.folio, infoExtra.fecha, infoProd.descripcion, infoV.cantidadC, infoProd.precio, (infoProd.precio*(float)infoV.cantidadC));
 							}
 						}
 						rewind(archProd);
 					}
 				}
+				printf("%110s: %.2f\n%110s: %.2f\n%110s: %.2f\n%110s: %.2f\n\n\n", "Subtotal", infoExtra.subtotal, "Descuento", infoExtra.descuento, "IVA", infoExtra.iva, "Total", infoExtra.total);
 				rewind(archVentas);
 			}
 		}
@@ -317,6 +414,7 @@ void mostrarVentasPorCliente() {
 	fclose(archInfoE);
 	fclose(archVentas);	
 	fclose(archProd);
+	system("pause");
 }
     	
     

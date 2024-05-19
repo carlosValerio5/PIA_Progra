@@ -44,10 +44,13 @@ int consultaClav2(cliente *);
 
 int consultaClavP(Producto *);
 
-void procesoVenta(dataV *, infoI *);
+void procesoVenta(dataV *, infoI *, char ***, int *);
 
 void procesoTicket(void);
 
 void ventasDiaActual(void);
+
+
+void mostrarVentasPorCliente(void);
 
 #endif
