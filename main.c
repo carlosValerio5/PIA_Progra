@@ -177,6 +177,7 @@ int main(){
 	        	}
 		    	else if (opcionPrincipal == 4){
 		    		//Inventario
+					InventarioMenu();
 		    	}
 		    	else if(opcionPrincipal == 5){
 		    		//Usuarios
