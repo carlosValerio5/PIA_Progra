@@ -1,5 +1,5 @@
-#ifndef PRODUCTO_H
-#define PRODUCTO_H
+#ifndef _PRODUCTO_H
+#define _PRODUCTO_H
 
 #include <stdio.h>
 #include <stdlib.h>

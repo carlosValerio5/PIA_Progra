@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include ".lib/Inventario.h"
+#include "lib/Inventario.h"
 
 // Funcion principal de Inventario
 void InventarioMenu() {

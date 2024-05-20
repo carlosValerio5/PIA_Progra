@@ -6,6 +6,7 @@
 #include "Usuarios.c"
 #include "login.c"
 #include "producto.c"
+#include "Inventario.c"
 
 void menuPrincipaladmin(){
 	printf("\nComercializadora Fuentes");

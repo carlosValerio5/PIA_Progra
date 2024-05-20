@@ -1,5 +1,5 @@
-#ifndef CLIENTES_H
-#define CLIENTES_H
+#ifndef _CLIENTES_H
+#define _CLIENTES_H
 typedef struct{
     char calle[50];
     char colonia[50];
