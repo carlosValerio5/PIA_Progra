@@ -180,7 +180,7 @@ void procesoVenta(dataV *ventaF, infoI *InfoEF, char ***cadenas, int *tamanio)
 		
 		
 
-        FILE *archivoVentas = fopen("bin/VentasG.bin", "ab");
+        FILE *archivoVentas = fopen("./bin/VentasG.bin", "ab");
         fwrite(ventaF, sizeof(dataV), 1, archivoVentas);
 		fclose(archivoVentas);
 
@@ -218,7 +218,7 @@ void procesoTicket()
     {
         venta.ID_Cliente=clienteV.ID;
         struct stat st;
-        const char *nombreArchivo = "bin/ventasG.bin";
+        const char *nombreArchivo = "./bin/ventasG.bin";
         if(stat(nombreArchivo, &st)== 0)
         {
             FILE*archivoVentas = fopen(nombreArchivo, "rb+");
@@ -250,7 +250,7 @@ void procesoTicket()
         infoE.iva = infoE.subtotal*.16;
         infoE.total = infoE.subtotal+infoE.iva-infoE.descuento;
 
-        FILE *archiInfoE = fopen("bin/InfoE.bin", "ab");
+        FILE *archiInfoE = fopen("./bin/InfoE.bin", "ab");
         fwrite(&infoE, sizeof(infoI), 1, archiInfoE);
         fclose(archiInfoE);
 
@@ -323,7 +323,7 @@ void mostrarDatosDeHoy() {
     obtener_fecha(fecha_actual, 11);
 
     // Abrir el archivo "InfoE.dat" en modo lectura
-    FILE *archivo = fopen("bin/InfoE.bin", "rb");
+    FILE *archivo = fopen("./bin/InfoE.bin", "rb");
     if (archivo == NULL) {
         printf("No se pudo abrir el archivo.\n");
         return;
@@ -368,9 +368,9 @@ void mostrarVentasPorCliente() {
     
     
 
-    FILE *archInfoE = fopen("bin/InfoE.bin", "rb");
-    FILE *archVentas = fopen("bin/ventasG.bin", "rb");
-    FILE *archProd = fopen("bin/productos.bin", "rb");
+    FILE *archInfoE = fopen("./bin/InfoE.bin", "rb");
+    FILE *archVentas = fopen("./bin/ventasG.bin", "rb");
+    FILE *archProd = fopen("./bin/productos.bin", "rb");
     if(consultaClav2(&clienteV) == 1)
     {
     	printf("                                         Comercializadora Fuentes\n");

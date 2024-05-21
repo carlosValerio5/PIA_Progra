@@ -89,7 +89,7 @@ void Reabastecimiento() {
 
     printf("Productos en la categoria: %s\n", categoriaNombre);
 
-    FILE *file = fopen("productos.bin", "rb+");
+    FILE *file = fopen("./bin/productos.bin", "rb+");
     if (file == NULL) {
         perror("Error al abrir el archivo productos.bin");
         return;
@@ -157,7 +157,7 @@ void Reabastecimiento() {
                 printf("Producto actualizado: Clave: %d, Nombre: %s, Nueva Cantidad: %d\n", producto.clave, producto.nombre, producto.cantidad);
 
                 // Registrar el reabastecimiento
-                FILE *reabFile = fopen("reabastecimientos.bin", "ab");
+                FILE *reabFile = fopen("./bin/reabastecimientos.bin", "ab");
                 if (reabFile == NULL) {
                     perror("Error al abrir el archivo reabastecimientos.bin");
                     fclose(file);
