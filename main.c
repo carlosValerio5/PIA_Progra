@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "clientes.c"
-#include "VentasF.c"
-#include "Usuarios.c"
+#include "./Clientes/clientes.c"
+#include "./Ventas/VentasF.c"
+#include "./Usuarios/Usuarios.c"
 #include "login.c"
-#include "producto.c"
-#include "Inventario.c"
+#include "./Productos/producto.c"
+#include "./Inventario/Inventario.c"
 
 void menuPrincipaladmin(){
 	printf("\nComercializadora Fuentes");
@@ -52,12 +52,12 @@ int main(){
         //Poner al usuario Principal
         dataU usP;
         usP.id= 1;
-		strcpy(usP.nombre,"Guillermo");
-		strcpy(usP.apellidoP,"Bautista");
-		strcpy(usP.apellidoM,"Hernandez");
-		strcpy(usP.correo, "guille@gmail.com");
-		strcpy(usP.nombreUsuario,"GuillermoBta");
-		strcpy(usP.contra,"Guille123");
+		strcpy(usP.nombre,"Admin");
+		strcpy(usP.apellidoP,"Admin");
+		strcpy(usP.apellidoM,"Admin");
+		strcpy(usP.correo, "admin@hotmail.com");
+		strcpy(usP.nombreUsuario,"admin");
+		strcpy(usP.contra,"password");
 		strcpy(usP.direccion.calle,"Calle 1");
 		strcpy(usP.direccion.colonia,"Colonia 1");
 		usP.direccion.numero = 1083;

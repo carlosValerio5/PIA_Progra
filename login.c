@@ -2,7 +2,7 @@
 #include <string.h>
 #include <windows.h>
 #include "./lib/login.h"
-#include "./lib/Usuarios.h"
+#include "./usuarios/Usuarios.h"
 
 int loginUsuario(dataU *comparar){
     char nombrepasado[30];

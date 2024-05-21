@@ -3,9 +3,9 @@
 #include <locale.h>
 #include <time.h>
 #include <string.h>
-#include "./lib/VentasF.h"
-#include "./lib/clientes.h"
-#include "./lib/producto.h"
+#include "VentasF.h"
+#include "../Clientes/clientes.h"
+#include "../Productos/producto.h"
 
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -336,7 +336,7 @@ void mostrarDatosDeHoy() {
     // Leer los datos del archivo y mostrar los que coincidan con la fecha actual
     infoI info;
     int encontrados = 0;
-    printf("\n\t\t\t\tComercializadora Fuentes\n\t\t\tReporte de Ventas al día %s\nFolio   Cliente   Subtotal   Descuento   IVA     Total\n\n", fecha_actual);
+    printf("\n\t\t\t\tComercializadora Fuentes\n\t\t\tReporte de Ventas al dï¿½a %s\nFolio   Cliente   Subtotal   Descuento   IVA     Total\n\n", fecha_actual);
     while (fread(&info, sizeof(infoI), 1, archivo) ==1) {
         if (strcmp(info.fecha, fecha_actual) == 0) {
             printf("%-8d%-10s%-12.2f%-10.2f%-8.2f%-8.2f\n", info.folio, info.cliente, info.subtotal, info.descuento, info.iva, info.total);
@@ -377,8 +377,8 @@ void mostrarVentasPorCliente() {
 		printf("                                      Reporte de Ventas por Cliente\n");
 		printf("Clave:  %ld\n", clienteV.ID);
 		printf("Nombre :  %s %s %s\n", clienteV.nombre, clienteV.apellidoP, clienteV.apellidoM);
-		printf("Dirección:  %d %s %s %d\n", clienteV.dir.cp, clienteV.dir.colonia, clienteV.dir.calle, clienteV.dir.numero);
-		printf("Teléfono : %ld\t\t\t\t\t\t\tCorreo Electrónico: %s\n\n", clienteV.telefono, clienteV.correo);
+		printf("Direcciï¿½n:  %d %s %s %d\n", clienteV.dir.cp, clienteV.dir.colonia, clienteV.dir.calle, clienteV.dir.numero);
+		printf("Telï¿½fono : %ld\t\t\t\t\t\t\tCorreo Electrï¿½nico: %s\n\n", clienteV.telefono, clienteV.correo);
     	while(fread(&infoExtra, sizeof(infoI), 1, archInfoE) == 1)
     	{
     		if(strcmp(clienteV.nombre, infoExtra.cliente) == 0)
@@ -397,7 +397,7 @@ void mostrarVentasPorCliente() {
     							//printf("\n\n\n\nCantidad de productos con la clave");
 							    int longitud = strlen(infoProd.descripcion);
 							    if (infoProd.descripcion[longitud - 1] == '\n') {
-							        infoProd.descripcion[longitud - 1] = '\0'; // Reemplaza el carácter de salto de línea con el terminador de cadena
+							        infoProd.descripcion[longitud - 1] = '\0'; // Reemplaza el carï¿½cter de salto de lï¿½nea con el terminador de cadena
 							    }
 							    printf("%-8s%-15s%-50s%-10s%-8s%-8s\n", "Folio", "Fecha", "Descripcion", "Cantidad", "Precio", "Total");
 								printf("%-8d%-15s%-50s%-10d%-8.2f%-8.2f\n", infoExtra.folio, infoExtra.fecha, infoProd.descripcion, infoV.cantidadC, infoProd.precio, (infoProd.precio*(float)infoV.cantidadC));

@@ -5,7 +5,7 @@
 #include<windows.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include "./lib/usuarios.h"
+#include "usuarios.h"
 
 //Borre las estructuras al principio de este archivo porque ya estan definidas dentro de el archivo usuarios.h
 
@@ -90,26 +90,21 @@ void nuevoU()
     scanf("%d", &(usuarioF.tipoUsuario));
 
     //Para sacar el ID tendremos que leer el archivo y ver cual ID fue el ultimo en ser agregado
-    FILE *archivo = fopen("./usuarios/usuariosData.bin", "rb");
+    FILE *archivo = fopen("usuariosData.bin", "rb");
     // Leer la estructura del archivo
     dataU us;
-    while(!feof(archivo))
+    while(fread(&us, sizeof(dataU), 1, archivo))
     {
-		fread(&us, sizeof(dataU), 1, archivo);
-		if (feof(archivo)) 
-		{
-			break;
-        }
     }
     usuarioF.id = us.id + 1;
     fclose(archivo);
 
     //Ahora pondremos los datos en el archivo
-    FILE *archivos = fopen("usuarios/usuariosData.bin", "ab");
+    FILE *archivos = fopen("usuariosData.bin", "ab");
     fwrite(&usuarioF, sizeof(dataU), 1, archivos);
     fclose(archivos);
 	printf("\nUsuario agregado");
-	Sleep(2000);
+	Sleep(3000);
 }
 
 
@@ -124,7 +119,7 @@ void EliminarUsuario(void) //Funcion para eliminar el usuario
 	nombre[strcspn(nombre, "\n")] = '\0';
 	
 	//buscamos si el nombre existe
-	FILE *archivo = fopen("usuarios/usuariosData.bin","rb");
+	FILE *archivo = fopen("usuariosData.bin","rb");
 	dataU usuario;
 	int i=0;
 	
@@ -151,7 +146,7 @@ void EliminarUsuario(void) //Funcion para eliminar el usuario
 			return;
 		}
 	}else{
-		FILE *archivos = fopen("usuarios/usuariosData.bin","rb+");
+		FILE *archivos = fopen("usuariosData.bin","rb+");
 		rewind(archivos);
 		while(!feof(archivo))
 		{
@@ -195,7 +190,7 @@ void reactivarUsuario(void) //Funcion para activar el usuario (SIMILAR A ELIMINA
 	nombre[strcspn(nombre, "\n")] = '\0';
 	
 	//buscamos si el nombre existe
-	FILE *archivo = fopen("usuarios/usuariosData.bin","rb");
+	FILE *archivo = fopen("usuariosData.bin","rb");
 	dataU usuario;
 	int i=0;
 	
@@ -223,7 +218,7 @@ void reactivarUsuario(void) //Funcion para activar el usuario (SIMILAR A ELIMINA
 			return;
 		}
 	}else{
-		FILE *archivos = fopen("usuarios/usuariosData.bin","rb+");
+		FILE *archivos = fopen("usuariosData.bin","rb+");
 		rewind(archivos);
 		while(!feof(archivo))
 		{

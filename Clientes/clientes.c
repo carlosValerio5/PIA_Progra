@@ -5,8 +5,8 @@
 #include <windows.h> //libreria para el Sleep
 #include <pthread.h>
 
-#include "./lib/clientes.h"
-#include "./lib/VentasF.h" //Para obtener fecha
+#include "clientes.h"
+#include "../Ventas/VentasF.h" //Para obtener fecha
 
 typedef struct{
     int num;

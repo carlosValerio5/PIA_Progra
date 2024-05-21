@@ -8,8 +8,8 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include "clientes.h"
-#include "producto.h"
+#include "../Clientes/clientes.h"
+#include "../Productos/producto.h"
 
 
 
