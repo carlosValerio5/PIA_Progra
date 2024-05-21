@@ -197,7 +197,7 @@ void editar_producto() {
 
 //funcion para consulta por tipo
 void consulta_tipo() {
-Producto *productos = NULL;
+    Producto *productos = NULL;
     int total = 0;
     char fecha_str[11];
     int tipo;

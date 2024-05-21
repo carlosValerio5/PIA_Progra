@@ -330,7 +330,7 @@ void *consultaNom(void *argumentos){
             printf("\t\t%s", (coincidencia.estatus)==1?"Activo\0":"Inactivo\0");
             flag = 1;
         }
-        else if ((strcmp(coincidencia.apellidoP, nom))==0){
+        else if ((strcmp(coincidencia.apellidoM, nom))==0){
             printf("\n%s %s %s", coincidencia.nombre, coincidencia.apellidoP, coincidencia.apellidoM);
             printf("\t%d", coincidencia.ID);
             printf("\t%s %s %d %d", coincidencia.dir.colonia, coincidencia.dir.calle, coincidencia.dir.numero, coincidencia.dir.cp);
