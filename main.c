@@ -41,7 +41,7 @@ int main(){
 	
 	
 	//Comprobacion y creacion del archivo "UsuariosData"
-	const char *nombreArchivo = "usuarios/usuariosData.bin";
+	const char *nombreArchivo = "./usuarios/usuariosData.bin";
 
 	if (stat(nombreArchivo, &st) == 0) {
         // El archivo ya existe

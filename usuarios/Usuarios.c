@@ -90,7 +90,7 @@ void nuevoU()
     scanf("%d", &(usuarioF.tipoUsuario));
 
     //Para sacar el ID tendremos que leer el archivo y ver cual ID fue el ultimo en ser agregado
-    FILE *archivo = fopen("usuariosData.bin", "rb");
+    FILE *archivo = fopen("./usuarios/usuariosData.bin", "rb");
     // Leer la estructura del archivo
     dataU us;
     while(fread(&us, sizeof(dataU), 1, archivo))
@@ -100,7 +100,7 @@ void nuevoU()
     fclose(archivo);
 
     //Ahora pondremos los datos en el archivo
-    FILE *archivos = fopen("usuariosData.bin", "ab");
+    FILE *archivos = fopen("./usuarios/usuariosData.bin", "ab");
     fwrite(&usuarioF, sizeof(dataU), 1, archivos);
     fclose(archivos);
 	printf("\nUsuario agregado");
@@ -119,7 +119,7 @@ void EliminarUsuario(void) //Funcion para eliminar el usuario
 	nombre[strcspn(nombre, "\n")] = '\0';
 	
 	//buscamos si el nombre existe
-	FILE *archivo = fopen("usuariosData.bin","rb");
+	FILE *archivo = fopen("./usuarios/usuariosData.bin","rb");
 	dataU usuario;
 	int i=0;
 	
@@ -146,7 +146,7 @@ void EliminarUsuario(void) //Funcion para eliminar el usuario
 			return;
 		}
 	}else{
-		FILE *archivos = fopen("usuariosData.bin","rb+");
+		FILE *archivos = fopen("./usuarios/usuariosData.bin","rb+");
 		rewind(archivos);
 		while(!feof(archivo))
 		{
@@ -190,7 +190,7 @@ void reactivarUsuario(void) //Funcion para activar el usuario (SIMILAR A ELIMINA
 	nombre[strcspn(nombre, "\n")] = '\0';
 	
 	//buscamos si el nombre existe
-	FILE *archivo = fopen("usuariosData.bin","rb");
+	FILE *archivo = fopen("./usuarios/usuariosData.bin","rb");
 	dataU usuario;
 	int i=0;
 	
@@ -218,7 +218,7 @@ void reactivarUsuario(void) //Funcion para activar el usuario (SIMILAR A ELIMINA
 			return;
 		}
 	}else{
-		FILE *archivos = fopen("usuariosData.bin","rb+");
+		FILE *archivos = fopen("./usuarios/usuariosData.bin","rb+");
 		rewind(archivos);
 		while(!feof(archivo))
 		{

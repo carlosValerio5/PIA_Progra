@@ -1,0 +1,14 @@
+
+
+		Ticket de compra:
+Cliente: Juanito
+Fecha: 2024-05-20
+Folio: 12
+Productos comprados:
+1. Silla
+
+
+Subtotal: 100,00
+Descuento: 0,00
+IVA: 16,00
+Total: 116,00
